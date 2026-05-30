@@ -4,3 +4,9 @@
 node_modules
 dist
 .cache
+
+# Secrets and machine-specific state — never commit
+.env
+.env.*
+!.env.example
+.deploy-manifest.json
