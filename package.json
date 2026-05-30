@@ -1,13 +1,22 @@
 {
-  "name": " ",
+  "name": "kaicomic",
   "version": "0.0.1",
-  "description": "",
+  "description": "Null and Void — a Legends of Willow webcomic",
   "private": true,
   "keywords": [
-    ""
+    "webcomic",
+    "null-and-void"
   ],
-  "license": "",
-  "author": "",
+  "license": "MIT",
+  "author": "Sushii64",
+  "contributors": [
+    "Sushii64",
+    "robinpie"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sushii64/kaicomic.git"
+  },
   "packageManager": "pnpm@11.3.0",
   "scripts": {
     "test": "node --test",
