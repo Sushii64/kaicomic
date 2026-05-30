@@ -429,16 +429,6 @@ import {
     const loadingOverlay = h('div', { class: 'media-overlay', 'data-kind': 'loading' }, 'Loading...');
     frame.appendChild(loadingOverlay);
 
-    const unmuteOverlay = h(
-        'div',
-        { class: 'media-overlay', 'data-kind': 'unmute', style: { display: 'none' } },
-        h('div', {},
-            h('div', { style: { marginBottom: '12px' } }, 'Click to unmute'),
-            h('button', { type: 'button' }, 'Start')
-        )
-    );
-    frame.appendChild(unmuteOverlay);
-
     const ruffle = window.RufflePlayer && window.RufflePlayer.newest ? window.RufflePlayer.newest() : null;
     if (!ruffle) {
       loadingOverlay.textContent = 'Flash player failed to load.';
@@ -448,25 +438,13 @@ import {
     const player = ruffle.createPlayer();
     frame.appendChild(player);
 
+    // Ruffle's own "visible" unmute overlay handles the browser autoplay-with-
+    // sound gesture requirement, so we don't render a custom one.
     player.config = {
       preloader: false,
       unmuteOverlay: "visible",
       autoplay: "on"
     };
-
-    // const startBtn = unmuteOverlay.querySelector('button');
-    // startBtn.addEventListener('click', async () => {
-    //   unmuteOverlay.style.display = 'none';
-    //   try {
-    //     if ('muted' in player) player.muted = false;
-    //     if ('volume' in player) player.volume = 1;
-    //     if (typeof player.play === 'function') await player.play();
-    //   } catch { /* ignore */ }
-    // });
-    //
-    // unmuteOverlay.addEventListener('click', (e) => {
-    //   if (e.target === unmuteOverlay) startBtn.click();
-    // });
 
     // Return the frame immediately so the caller can append it to the DOM,
     // THEN kick off the load. This ensures the player is connected before
@@ -476,7 +454,6 @@ import {
         await player.load({ url: swfUrl });
         if (!frame.isConnected) return;
         loadingOverlay.style.display = 'none';
-        unmuteOverlay.style.display = 'grid';
       } catch {
         if (frame.isConnected) loadingOverlay.textContent = 'SWF failed to load.';
       }

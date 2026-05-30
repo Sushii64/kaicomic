@@ -368,19 +368,6 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   font-size: 18px;
 }
 
-.image .media-frame .media-overlay button {
-  appearance: none;
-  background: #1a1f2a;
-  color: #e8e8e8;
-  font-weight: bold;
-  padding: 10px 18px;
-  border: 1px solid #4a4a4a;
-  cursor: pointer;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 16px;
-}
-.image .media-frame .media-overlay button:hover { background: #252a35; border-color: #5a5a5a; }
-
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 
 @media (max-width: 520px) {
