@@ -4,6 +4,17 @@
 // `document`, `location`, `fetch`, `fs`, or `process`, as those
 // will have to stay in the callers.
 
+export const SITE_TITLE = 'Null and Void';
+
+// Build the document.title for a story page: "<page title> - <site>", falling
+// back to the bare site name when the page has no title (or its title already
+// is the site name, to avoid "Null and Void - Null and Void").
+export function formatPageTitle(pageTitle) {
+  const trimmed = (pageTitle || '').trim();
+  if (!trimmed || trimmed === SITE_TITLE) return SITE_TITLE;
+  return `${trimmed} - ${SITE_TITLE}`;
+}
+
 // Default colors used when a speaker isn't found in the roster.
 export const DEFAULT_COLORS = { dark: '#d0d0d0', light: '#2a2a2a' };
 

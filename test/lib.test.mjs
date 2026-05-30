@@ -15,7 +15,33 @@ import {
   parseDate,
   parsePageNumber,
   boolFromEnv,
+  formatPageTitle,
+  SITE_TITLE,
 } from '../js/lib.mjs';
+
+// ─── formatPageTitle ─────────────────────────────────────────────────────────
+
+test('formatPageTitle: prefixes the page title before the site name', () => {
+  assert.equal(formatPageTitle('Lab Partner: Remember who you are.'),
+    'Lab Partner: Remember who you are. - ' + SITE_TITLE);
+});
+
+test('formatPageTitle: blank/missing page title falls back to the site name alone', () => {
+  assert.equal(formatPageTitle(''), SITE_TITLE);
+  assert.equal(formatPageTitle('   '), SITE_TITLE);
+  assert.equal(formatPageTitle(null), SITE_TITLE);
+  assert.equal(formatPageTitle(undefined), SITE_TITLE);
+});
+
+test('formatPageTitle: trims surrounding whitespace on the page title', () => {
+  assert.equal(formatPageTitle('  ACT 2  '), 'ACT 2 - ' + SITE_TITLE);
+});
+
+test('formatPageTitle: does not double up when the title already is the site name', () => {
+  // Page 1's title in txt/1.txt is literally "Null and Void" (the site name);
+  // showing "Null and Void - Null and Void" would be silly.
+  assert.equal(formatPageTitle(SITE_TITLE), SITE_TITLE);
+});
 
 // ─── parseTxtFile ──────────────────────────────────────────────────────────
 

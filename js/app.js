@@ -5,6 +5,7 @@ import {
   parseChatlog,
   formatDate,
   parsePageNumber,
+  formatPageTitle,
 } from './lib.mjs';
 
 (function () {
@@ -573,7 +574,7 @@ import {
       // Title
       const titleText = data.title || `Page ${n}`;
       panel.append(h('h2', { class: 'panel__title title' }, titleText));
-      document.title = `Null and Void`;
+      document.title = formatPageTitle(titleText);
 
       // Image (PNG/GIF) or SWF (Ruffle)
       // Image (PNG/GIF) or SWF (Ruffle)
