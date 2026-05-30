@@ -4,9 +4,6 @@
     - will color it with the right color and give it the monospace font
     - feel free to change the syntax however you wish
 - in chatlogs, it only colors the [CV] pattern but like Homestuck it should color the whole "cyanusViator [CV]" thing
-- fix broken ruffle unmute UI
-- currently text paints in default color then recolors, fix to just paint the right color immediately
-- make global click handler less fragile
 - maybe bring back the functionality for a page to try to pull the next page for the command link instead of the new functionality where it pulls from the index (presumably)
     - makes for easier testing of updates without having to generate the index 
     - optionally, add a flag to deploy to just generate the index

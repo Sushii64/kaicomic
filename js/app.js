@@ -610,6 +610,7 @@ import {
           onClick: (e) => {
             e.preventDefault();
             setToStorage(STORAGE_KEYS.SAVED_POSITION, String(n));
+            showTooltip(e.currentTarget, 'Saved!');
           }
         }, 'Save Position'),
         ' | ',
@@ -813,7 +814,8 @@ import {
     }
   });
 
-  // Enhance Save Position button with a tooltip
+  // Show a transient tooltip above an element (used by the Save Position link
+  // to confirm the save).
   function showTooltip(element, message) {
     const tooltip = h('div', {
       class: 'tooltip',
@@ -838,12 +840,6 @@ import {
 
     // Fade in and remove tooltip after a delay
     setTimeout(() => (tooltip.style.opacity = 1), 0);
-    setTimeout(() => element.removeChild(tooltip), 1500);
+    setTimeout(() => tooltip.remove(), 1500);
   }
-
-  document.addEventListener('click', (event) => {
-    if (event.target.textContent === 'Save Position') {
-      showTooltip(event.target, 'Saved!');
-    }
-  });
 })();
