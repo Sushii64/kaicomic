@@ -1,9 +1,9 @@
 import {
   parseTxtFile,
   buildRosterLookup,
-  colorsFor,
   parseChatlog,
   parseInlineHandles,
+  parseHeaderHandles,
   formatDate,
   parsePageNumber,
   formatPageTitle,
@@ -343,38 +343,20 @@ import {
           const blankLine = h('div', { class: 'chatlog-blank' }, '\u00A0');
           contentDiv.appendChild(blankLine);
         } else if (elem.type === 'header') {
-          // Parse header text and color [HANDLE] tags
+          // Parse header text, coloring the whole "handle [ABBR]" token.
           const headerLine = h('div', { class: 'chatlog-header' });
-          const headerText = elem.text;
-          const handleRegex = /\[([A-Z]+)\]/g;
-          let lastIndex = 0;
-          let handleMatch;
-
-          while ((handleMatch = handleRegex.exec(headerText)) !== null) {
-            // Add text before the handle
-            if (handleMatch.index > lastIndex) {
-              headerLine.appendChild(document.createTextNode(headerText.slice(lastIndex, handleMatch.index)));
+          for (const seg of parseHeaderHandles(elem.text, elem.roster)) {
+            if (seg.type === 'text') {
+              headerLine.appendChild(document.createTextNode(seg.text));
+            } else {
+              headerLine.appendChild(h('span', {
+                class: 'chatlog-handle-tag',
+                'data-dark-color': seg.colors.dark,
+                'data-light-color': seg.colors.light,
+                style: { color: colorForMode(seg.colors) }
+              }, seg.text));
             }
-
-            // Add colored handle with brackets
-            const handle = handleMatch[1];
-            const colors = colorsFor(elem.roster, handle);
-            const handleSpan = h('span', {
-              class: 'chatlog-handle-tag',
-              'data-dark-color': colors.dark,
-              'data-light-color': colors.light,
-              style: { color: colorForMode(colors) }
-            }, `[${handle}]`);
-            headerLine.appendChild(handleSpan);
-
-            lastIndex = handleMatch.index + handleMatch[0].length;
           }
-
-          // Add remaining text
-          if (lastIndex < headerText.length) {
-            headerLine.appendChild(document.createTextNode(headerText.slice(lastIndex)));
-          }
-
           contentDiv.appendChild(headerLine);
         } else if (elem.type === 'dialogue') {
           const line = h('div', { class: 'chatlog-line' },

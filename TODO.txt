@@ -1,4 +1,3 @@
-- in chatlogs, it only colors the [CV] pattern but like Homestuck it should color the whole "cyanusViator [CV]" thing
 - maybe bring back the functionality for a page to try to pull the next page for the command link instead of the new functionality where it pulls from the index (presumably)
     - makes for easier testing of updates without having to generate the index 
     - optionally, add a flag to deploy to just generate the index

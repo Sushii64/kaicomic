@@ -12,6 +12,7 @@ import {
   colorsFor,
   parseChatlog,
   parseInlineHandles,
+  parseHeaderHandles,
   formatDate,
   parseDate,
   parsePageNumber,
@@ -290,6 +291,52 @@ test('parseInlineHandles: handles multiple tags on one line', () => {
   assert.equal(segs[0].text, 'kai');
   assert.equal(segs[1].text, ' and ');
   assert.equal(segs[2].text, 'scott');
+});
+
+// ─── parseHeaderHandles ─────────────────────────────────────────────────────
+
+const HEADER_ROSTER = {
+  CV: { dark: '#00d5f0', light: '#007a8a' },
+  AF: { dark: '#8EFFCA', light: '#20b86d' },
+  CYANUSVIATOR: { dark: '#00d5f0', light: '#007a8a' },
+  AQUAFALLAX: { dark: '#8EFFCA', light: '#20b86d' },
+};
+
+test('parseHeaderHandles: colors the whole "handle [ABBR]" token', () => {
+  const segs = parseHeaderHandles(
+    '-- cyanusViator [CV] commenced chatting with aquaFallax [AF] --', HEADER_ROSTER);
+  assert.deepEqual(segs, [
+    { type: 'text', text: '-- ' },
+    { type: 'handle', text: 'cyanusViator [CV]', colors: { dark: '#00d5f0', light: '#007a8a' } },
+    { type: 'text', text: ' commenced chatting with ' },
+    { type: 'handle', text: 'aquaFallax [AF]', colors: { dark: '#8EFFCA', light: '#20b86d' } },
+    { type: 'text', text: ' --' },
+  ]);
+});
+
+test('parseHeaderHandles: does not absorb a preceding word that is not the handle', () => {
+  // "with" is not CV's handle, so only the bracket is colored (the preceding
+  // word stays as its own plain-text segment).
+  const segs = parseHeaderHandles('joined chat with [CV] --', HEADER_ROSTER);
+  assert.deepEqual(segs, [
+    { type: 'text', text: 'joined chat ' },
+    { type: 'text', text: 'with ' },
+    { type: 'handle', text: '[CV]', colors: { dark: '#00d5f0', light: '#007a8a' } },
+    { type: 'text', text: ' --' },
+  ]);
+});
+
+test('parseHeaderHandles: bare bracket with no preceding word', () => {
+  const segs = parseHeaderHandles('[CV] left', HEADER_ROSTER);
+  assert.deepEqual(segs, [
+    { type: 'handle', text: '[CV]', colors: { dark: '#00d5f0', light: '#007a8a' } },
+    { type: 'text', text: ' left' },
+  ]);
+});
+
+test('parseHeaderHandles: text without any bracket is one text segment', () => {
+  assert.deepEqual(parseHeaderHandles('-- just a banner --', HEADER_ROSTER),
+    [{ type: 'text', text: '-- just a banner --' }]);
 });
 
 // ─── formatDate ───────────────────────────────────────────────────────────

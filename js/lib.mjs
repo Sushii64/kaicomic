@@ -132,6 +132,43 @@ export function parseInlineHandles(text, roster = {}) {
   return segments;
 }
 
+// Split a chatlog header line (e.g. "-- cyanusViator [CV] began pestering --")
+// into colored handle tokens and plain text, like Homestuck pesterlogs
+const HEADER_HANDLE_RE = /(?:(\S+)\s+)?\[([A-Z]+)\]/g;
+export function parseHeaderHandles(text, roster = {}) {
+  const segments = [];
+  let last = 0;
+  let m;
+  HEADER_HANDLE_RE.lastIndex = 0;
+  while ((m = HEADER_HANDLE_RE.exec(text)) !== null) {
+    const precedingWord = m[1];
+    const abbr = m[2];
+    const matchStart = m.index;
+    const matchEnd = m.index + m[0].length;
+    const abbrColors = colorsFor(roster, abbr);
+    const wordColors = precedingWord ? colorsFor(roster, precedingWord) : null;
+    const absorb = !!wordColors
+      && wordColors.dark === abbrColors.dark && wordColors.light === abbrColors.light;
+
+    if (matchStart > last) segments.push({ type: 'text', text: text.slice(last, matchStart) });
+
+    if (absorb) {
+      // Color the whole "handle [ABBR]" token.
+      segments.push({ type: 'handle', text: text.slice(matchStart, matchEnd), colors: abbrColors });
+    } else {
+      // Leave any preceding word as plain text; color only the bracket.
+      const bracketStart = matchEnd - `[${abbr}]`.length;
+      if (bracketStart > matchStart) {
+        segments.push({ type: 'text', text: text.slice(matchStart, bracketStart) });
+      }
+      segments.push({ type: 'handle', text: `[${abbr}]`, colors: abbrColors });
+    }
+    last = matchEnd;
+  }
+  if (last < text.length) segments.push({ type: 'text', text: text.slice(last) });
+  return segments;
+}
+
 // Reformat a stored MM-DD-YYYY date string into the user's chosen display format.
 export function formatDate(dateStr, format) {
   if (!dateStr) return '';
