@@ -119,10 +119,12 @@ import {
     return parsePageNumber(location.pathname, location.hash);
   }
 
-  function renderHome() {
-    app.innerHTML = '';
-    applyLightMode();
-
+  // Build the shared page chrome that every view wraps its content in: the site
+  // header, the Home/Log/Map nav, the light-mode + Discord toggle, and an empty
+  // main > article(panel) for the caller to fill. Returns the pieces so each
+  // view can append content to `panel` and decide where to place `lightModeToggle`.
+  // panelClass sets the <article> class (e.g. 'panel page', 'panel home').
+  function renderChrome(panelClass = 'panel') {
     const header = h('header', { class: 'site-header' },
       h('div', { class: 'container' },
         h('h1', { class: 'site-title' }, 'Null and Void')
@@ -162,34 +164,45 @@ import {
 
     const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, ' | ', discordLink);
 
-    const main = h('main', { class: 'container' },
-      h('article', { class: 'panel home' },
-        h('h2', { class: 'panel__title' }, 'Null and Void'),
-        h('h3', { class: 'panel__subtitle' }, 'a Legends of Willow webcomic'),
-        h('p', { class: 'disclaimer' },
-          'This is a webcomic inspired by ',
-          h('a', { href: 'https://www.homestuck.com', target: '_blank', rel: 'noopener' }, 'Homestuck'),
-          ' by Andrew Hussie, even going as far as to borrow some concepts from it (though with different terminology), its writing style, and its structure. Other than structural things, I try my best to make my own story. Homestuck is an amazing work, and you all should go check it out if you haven\'t already.'
-        ),
-        h('p', { style: { textAlign: 'center', marginTop: '1rem' } },
-          'Join the ',
-          h('a', { href: 'https://discord.gg/pp3NrFrZKh', target: '_blank', rel: 'noopener' }, 'Discord'),
-          ' for updates and interaction!'
-        ),
-        h('div', { class: 'actions' },
-          h('button', { class: 'btn btn-primary', onClick: (e) => navigateTo('/story/1', e) }, 'Read!'),
-          h('p', { class: 'hash-fallback' },
-            'No clean URLs? Use ',
-            h('a', {
-              href: '#/story/1',
-              onClick: (e) => {
-                if (e.ctrlKey || e.metaKey || e.button === 1) return;
-                e.preventDefault();
-                location.hash = '#/story/1';
-                route();
-              }
-            }, '#/story/1')
-          )
+    const main = h('main', { class: 'container' });
+    const panel = h('article', { class: panelClass });
+    main.append(panel);
+
+    return { header, underHeader, lightModeToggle, main, panel };
+  }
+
+  function renderHome() {
+    app.innerHTML = '';
+    applyLightMode();
+
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel home');
+
+    panel.append(
+      h('h2', { class: 'panel__title' }, 'Null and Void'),
+      h('h3', { class: 'panel__subtitle' }, 'a Legends of Willow webcomic'),
+      h('p', { class: 'disclaimer' },
+        'This is a webcomic inspired by ',
+        h('a', { href: 'https://www.homestuck.com', target: '_blank', rel: 'noopener' }, 'Homestuck'),
+        ' by Andrew Hussie, even going as far as to borrow some concepts from it (though with different terminology), its writing style, and its structure. Other than structural things, I try my best to make my own story. Homestuck is an amazing work, and you all should go check it out if you haven\'t already.'
+      ),
+      h('p', { style: { textAlign: 'center', marginTop: '1rem' } },
+        'Join the ',
+        h('a', { href: 'https://discord.gg/pp3NrFrZKh', target: '_blank', rel: 'noopener' }, 'Discord'),
+        ' for updates and interaction!'
+      ),
+      h('div', { class: 'actions' },
+        h('button', { class: 'btn btn-primary', onClick: (e) => navigateTo('/story/1', e) }, 'Read!'),
+        h('p', { class: 'hash-fallback' },
+          'No clean URLs? Use ',
+          h('a', {
+            href: '#/story/1',
+            onClick: (e) => {
+              if (e.ctrlKey || e.metaKey || e.button === 1) return;
+              e.preventDefault();
+              location.hash = '#/story/1';
+              route();
+            }
+          }, '#/story/1')
         )
       )
     );
@@ -528,48 +541,7 @@ import {
     app.innerHTML = '';
     applyLightMode();
 
-    const header = h('header', { class: 'site-header' },
-      h('div', { class: 'container' },
-        h('h1', { class: 'site-title' }, 'Null and Void')
-      )
-    );
-
-    const underHeader = h('div', { class: 'under-header container' },
-      h('a', {
-        href: '/',
-        onClick: (e) => { if (!navigateTo('/', e)) e.preventDefault(); }
-      }, 'Home'),
-      ' | ',
-      h('a', {
-        href: '/log',
-        onClick: (e) => { if (!navigateTo('/log', e)) e.preventDefault(); }
-      }, 'Log'),
-      ' | ',
-      h('a', {
-        href: '/map',
-        onClick: (e) => { if (!navigateTo('/map', e)) e.preventDefault(); }
-      }, 'Map')
-    );
-
-    const lightModeLink = h('a', {
-      href: '#',
-      onClick: (e) => {
-        e.preventDefault();
-        toggleLightMode(lightModeLink);
-      }
-    }, document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode');
-
-    const discordLink = h('a', {
-      href: 'https://discord.gg/pp3NrFrZKh',
-      target: '_blank',
-      rel: 'noopener'
-    }, 'Discord');
-
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, ' | ', discordLink);
-
-    const main = h('main', { class: 'container' });
-    const panel = h('article', { class: 'panel page' });
-    main.append(panel);
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel page');
     app.append(header, underHeader, main);
 
     // Loading state
@@ -587,7 +559,6 @@ import {
       panel.append(h('h2', { class: 'panel__title title' }, titleText));
       document.title = formatPageTitle(titleText);
 
-      // Image (PNG/GIF) or SWF (Ruffle)
       // Image (PNG/GIF) or SWF (Ruffle)
       const imgWrap = h('div', { class: 'image' });
       imgWrap.appendChild(await mediaElementFor(n));
@@ -715,48 +686,7 @@ import {
     app.innerHTML = '';
     applyLightMode();
 
-    const header = h('header', { class: 'site-header' },
-      h('div', { class: 'container' },
-        h('h1', { class: 'site-title' }, 'Null and Void')
-      )
-    );
-
-    const underHeader = h('div', { class: 'under-header container' },
-      h('a', {
-        href: '/',
-        onClick: (e) => { if (!navigateTo('/', e)) e.preventDefault(); }
-      }, 'Home'),
-      ' | ',
-      h('a', {
-        href: '/log',
-        onClick: (e) => { if (!navigateTo('/log', e)) e.preventDefault(); }
-      }, 'Log'),
-      ' | ',
-      h('a', {
-        href: '/map',
-        onClick: (e) => { if (!navigateTo('/map', e)) e.preventDefault(); }
-      }, 'Map')
-    );
-
-    const lightModeLink = h('a', {
-      href: '#',
-      onClick: (e) => {
-        e.preventDefault();
-        toggleLightMode(lightModeLink);
-      }
-    }, document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode');
-
-    const discordLink = h('a', {
-      href: 'https://discord.gg/pp3NrFrZKh',
-      target: '_blank',
-      rel: 'noopener'
-    }, 'Discord');
-
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, ' | ', discordLink);
-
-    const main = h('main', { class: 'container' });
-    const panel = h('article', { class: 'panel' });
-    main.append(panel);
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel');
     app.append(header, underHeader, main);
 
     panel.append(h('h2', { class: 'panel__title' }, 'Log'));
@@ -843,48 +773,7 @@ import {
     app.innerHTML = '';
     applyLightMode();
 
-    const header = h('header', { class: 'site-header' },
-      h('div', { class: 'container' },
-        h('h1', { class: 'site-title' }, 'Null and Void')
-      )
-    );
-
-    const underHeader = h('div', { class: 'under-header container' },
-      h('a', {
-        href: '/',
-        onClick: (e) => { if (!navigateTo('/', e)) e.preventDefault(); }
-      }, 'Home'),
-      ' | ',
-      h('a', {
-        href: '/log',
-        onClick: (e) => { if (!navigateTo('/log', e)) e.preventDefault(); }
-      }, 'Log'),
-      ' | ',
-      h('a', {
-        href: '/map',
-        onClick: (e) => { if (!navigateTo('/map', e)) e.preventDefault(); }
-      }, 'Map')
-    );
-
-    const lightModeLink = h('a', {
-      href: '#',
-      onClick: (e) => {
-        e.preventDefault();
-        toggleLightMode(lightModeLink);
-      }
-    }, document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode');
-
-    const discordLink = h('a', {
-      href: 'https://discord.gg/pp3NrFrZKh',
-      target: '_blank',
-      rel: 'noopener'
-    }, 'Discord');
-
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, ' | ', discordLink);
-
-    const main = h('main', { class: 'container' });
-    const panel = h('article', { class: 'panel' });
-    main.append(panel);
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel');
     app.append(header, underHeader, main);
 
     panel.append(

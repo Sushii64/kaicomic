@@ -7,7 +7,6 @@
 - fix broken ruffle unmute UI
 - currently text paints in default color then recolors, fix to just paint the right color immediately
 - make global click handler less fragile
-- consolidate duplicated page chrome code into a shared function
 - maybe bring back the functionality for a page to try to pull the next page for the command link instead of the new functionality where it pulls from the index (presumably)
     - makes for easier testing of updates without having to generate the index 
     - optionally, add a flag to deploy to just generate the index
