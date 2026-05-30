@@ -30,7 +30,7 @@ import { promises as fsp } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { Client as FtpClient } from 'basic-ftp';
 import webpack from 'webpack';
-import { boolFromEnv, parseTxtMeta } from './js/lib.mjs';
+import { boolFromEnv, parseTxtMeta, toPosixPath, computeModifiedFiles } from './js/lib.mjs';
 
 const MANIFEST_FILE = '.deploy-manifest.json';
 const BATCH_SIZE = 10;
@@ -293,47 +293,62 @@ async function getModifiedFilesWithManifest(localDir) {
   return { modifiedFiles, newManifest };
 }
 
+// Recursively list a remote tree into a Map keyed by relative posix path -> size.
+// basic-ftp's client.list() is per-directory, so we walk subdirectories
+// ourselves; without this, nested files would never match and would be
+// re-uploaded every run.
+async function listRemoteFilesRecursive(client, remoteDir, prefix = '') {
+  const result = new Map();
+  let entries;
+  try {
+    entries = await client.list(remoteDir);
+  } catch {
+    return result; // directory missing or not listable
+  }
+  for (const file of entries) {
+    const relPath = prefix ? `${prefix}/${file.name}` : file.name;
+    if (file.type === 2) { // directory
+      const sub = await listRemoteFilesRecursive(client, path.posix.join(remoteDir, file.name), relPath);
+      for (const [k, v] of sub) result.set(k, v);
+    } else if (file.type === 1) { // file
+      result.set(relPath, file.size);
+    }
+  }
+  return result;
+}
+
 async function getModifiedFilesViaFTP(client, localDir, remoteDir) {
   console.log('Analyzing files for changes (comparing with remote)...');
   const localFiles = await getAllLocalFiles(localDir);
-  const modifiedFiles = [];
   const newManifest = {};
 
-  let remoteFileMap = new Map();
+  // Remote snapshot keyed by relative posix path (recursive, so nested files
+  // and same-named files in different folders compare correctly).
+  let remoteSizeByPath = new Map();
   try {
-    const remoteFiles = await client.list(remoteDir);
-    for (const file of remoteFiles) {
-      if (file.type === 1) remoteFileMap.set(file.name, file.size);
-    }
+    remoteSizeByPath = await listRemoteFilesRecursive(client, remoteDir);
   } catch {
     console.warn('Could not list remote directory, treating all files as new');
   }
 
-  let newCount = 0, modifiedCount = 0, unchangedCount = 0;
-
+  // Stat + hash every local file for the manifest, and build posix-keyed
+  // { path, size } entries for the diff.
+  const localEntries = [];
   for (let i = 0; i < localFiles.length; i += BATCH_SIZE) {
     const batch = localFiles.slice(i, i + BATCH_SIZE);
     await Promise.all(batch.map(async (relativePath) => {
-      const localPath = path.join(localDir, relativePath);
-      const metadata = await getFileMetadata(localPath);
+      const metadata = await getFileMetadata(path.join(localDir, relativePath));
       newManifest[relativePath] = metadata;
-
-      const remoteSize = remoteFileMap.get(path.basename(relativePath));
-      if (remoteSize === undefined) {
-        console.log(`  New: ${relativePath}`);
-        modifiedFiles.push(relativePath);
-        newCount++;
-      } else if (remoteSize !== metadata.size) {
-        console.log(`  Modified: ${relativePath} (size changed)`);
-        modifiedFiles.push(relativePath);
-        modifiedCount++;
-      } else {
-        unchangedCount++;
-      }
+      localEntries.push({ path: toPosixPath(relativePath), size: metadata.size });
     }));
   }
 
-  console.log(`Summary: ${newCount} new, ${modifiedCount} modified, ${unchangedCount} unchanged (by size)`);
+  const { modifiedFiles, summary } = computeModifiedFiles(localEntries, remoteSizeByPath);
+  for (const p of modifiedFiles) {
+    console.log(remoteSizeByPath.has(p) ? `  Modified: ${p} (size changed)` : `  New: ${p}`);
+  }
+  console.log(`Summary: ${summary.newCount} new, ${summary.modifiedCount} modified, ${summary.unchangedCount} unchanged (by size only — FTP can't detect same-size edits)`);
+
   return { modifiedFiles, newManifest };
 }
 

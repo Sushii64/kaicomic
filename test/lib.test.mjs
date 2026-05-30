@@ -19,6 +19,8 @@ import {
   SITE_TITLE,
   findPageEntry,
   nextPageEntry,
+  toPosixPath,
+  computeModifiedFiles,
 } from '../js/lib.mjs';
 
 // ─── formatPageTitle ─────────────────────────────────────────────────────────
@@ -78,6 +80,63 @@ test('nextPageEntry: returns null for a gap in numbering', () => {
   // index missing num 2 → page 1 has no immediate next
   const gapped = [{ num: 1, title: 'a' }, { num: 3, title: 'c' }];
   assert.equal(nextPageEntry(gapped, 1), null);
+});
+
+// ─── toPosixPath ─────────────────────────────────────────────────────────────
+
+test('toPosixPath: converts backslashes to forward slashes; posix unchanged', () => {
+  assert.equal(toPosixPath('css/style.css'), 'css/style.css');
+  assert.equal(toPosixPath('img\\act1\\1.png'), 'img/act1/1.png');
+  assert.equal(toPosixPath(''), '');
+});
+
+// ─── computeModifiedFiles ─────────────────────────────────────────────────────
+
+test('computeModifiedFiles: classifies new, modified (size), and unchanged by relative path', () => {
+  const local = [
+    { path: 'index.html', size: 100 },
+    { path: 'css/style.css', size: 250 }, // size differs from remote → modified
+    { path: 'js/app.js', size: 500 },     // not on remote → new
+  ];
+  const remote = new Map([
+    ['index.html', 100],
+    ['css/style.css', 240],
+  ]);
+
+  const { modifiedFiles, summary } = computeModifiedFiles(local, remote);
+  assert.deepEqual(modifiedFiles.sort(), ['css/style.css', 'js/app.js']);
+  assert.deepEqual(summary, { newCount: 1, modifiedCount: 1, unchangedCount: 1 });
+});
+
+test('computeModifiedFiles: keys by full relative path, not basename (collision regression)', () => {
+  // Two different files share a basename. The remote has only css/style.css at a
+  // matching size. Keying by basename would wrongly treat js/style.css as
+  // unchanged; keying by full path correctly flags it as new.
+  const local = [
+    { path: 'css/style.css', size: 300 },
+    { path: 'js/style.css', size: 999 },
+  ];
+  const remote = new Map([['css/style.css', 300]]);
+
+  const { modifiedFiles } = computeModifiedFiles(local, remote);
+  assert.deepEqual(modifiedFiles, ['js/style.css']);
+});
+
+test('computeModifiedFiles: nested file matched by its full path is unchanged', () => {
+  // Demonstrates the recursive-listing contract: the remote map is keyed by
+  // relative path including subdirectories, so img/1.png matches img/1.png.
+  const local = [{ path: 'img/1.png', size: 42 }];
+  const remote = new Map([['img/1.png', 42]]);
+  const { modifiedFiles, summary } = computeModifiedFiles(local, remote);
+  assert.deepEqual(modifiedFiles, []);
+  assert.equal(summary.unchangedCount, 1);
+});
+
+test('computeModifiedFiles: empty remote map means everything is new', () => {
+  const local = [{ path: 'a', size: 1 }, { path: 'b', size: 2 }];
+  const { modifiedFiles, summary } = computeModifiedFiles(local, new Map());
+  assert.deepEqual(modifiedFiles, ['a', 'b']);
+  assert.equal(summary.newCount, 2);
 });
 
 // ─── parseTxtFile ──────────────────────────────────────────────────────────
