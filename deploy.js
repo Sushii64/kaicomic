@@ -30,15 +30,10 @@ import { promises as fsp } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { Client as FtpClient } from 'basic-ftp';
 import webpack from 'webpack';
+import { boolFromEnv, parseTxtMeta } from './js/lib.mjs';
 
 const MANIFEST_FILE = '.deploy-manifest.json';
 const BATCH_SIZE = 10;
-
-function boolFromEnv(value, def = false) {
-  if (value == null) return def;
-  const v = String(value).trim().toLowerCase();
-  return v === '1' || v === 'true' || v === 'yes' || v === 'on';
-}
 
 function parseArgs() {
   const args = new Set(process.argv.slice(2));
@@ -94,17 +89,8 @@ async function deleteDist(distPath) {
 //   MM-DD-YYYY          ← optional date on line 2, before the ------ separator
 //   ------
 //   ...content...
-
-function parseTxtMeta(raw) {
-  const lines = raw.replace(/\r\n/g, '\n').split('\n');
-  const title = (lines[0] || '').trim();
-  let date = null;
-  if (lines.length > 1) {
-    const second = lines[1].trim();
-    if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(second)) date = second;
-  }
-  return { title, date };
-}
+//
+// parseTxtMeta lives in js/lib.mjs (shared with the browser app).
 
 async function generatePageIndex(txtDir, outPath) {
   console.log('Generating page index (txt/index.json)...');

@@ -1,3 +1,12 @@
+import {
+  parseTxtFile,
+  buildRosterLookup,
+  colorsFor,
+  parseChatlog,
+  formatDate,
+  parsePageNumber,
+} from './lib.mjs';
+
 (function () {
   const app = document.getElementById('app');
 
@@ -105,15 +114,7 @@
   }
 
   function getRequestedPageNumber() {
-    // Prefer pathname (/story/1 or legacy /1). Either way the page number is the last numeric path segment.
-    const fromPath = (location.pathname || '').split('/').filter(Boolean).pop();
-    if (fromPath && /^\d+$/.test(fromPath)) return parseInt(fromPath, 10);
-
-    if (location.hash && location.hash.startsWith('#/')) {
-      const fromHash = location.hash.slice(2).split('/').filter(Boolean).pop();
-      if (fromHash && /^\d+$/.test(fromHash)) return parseInt(fromHash, 10);
-    }
-    return null;
+    return parsePageNumber(location.pathname, location.hash);
   }
 
   function renderHome() {
@@ -195,29 +196,6 @@
     document.title = 'Null and Void';
   }
 
-  function parseTxtFile(text) {
-    const norm = text.replace(/\r\n/g, '\n');
-    const lines = norm.split('\n');
-    const sepIndex = lines.findIndex(l => l.trim() === '------');
-    const title = (lines[0] || '').trim();
-
-    // Check if second line is a date (MM-DD-YYYY format)
-    let date = null;
-    let contentStartLine = 1;
-    if (sepIndex > 1) {
-      const secondLine = lines[1].trim();
-      if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(secondLine)) {
-        date = secondLine;
-        contentStartLine = 2;
-      }
-    }
-
-    const content = sepIndex >= 0
-      ? lines.slice(sepIndex + 1).join('\n').trim()
-      : lines.slice(contentStartLine).join('\n').trim();
-    return { title, date, content };
-  }
-
   async function fetchTxt(n) {
     const url = `/txt/${n}.txt`;
     const res = await fetch(url, { cache: 'no-cache' });
@@ -225,9 +203,6 @@
     const text = await res.text();
     return parseTxtFile(text);
   }
-
-  // Default colors used when a speaker isn't found in the roster.
-  const DEFAULT_COLORS = { dark: '#d0d0d0', light: '#2a2a2a' };
 
   let rosterCache = null;
 
@@ -242,25 +217,12 @@
         return rosterCache;
       }
       const data = await res.json();
-
-      const lookup = {};
-      for (const [name, info] of Object.entries(data)) {
-        const colors = { dark: info.dark || DEFAULT_COLORS.dark, light: info.light || info.dark || DEFAULT_COLORS.light };
-        for (const id of [name, info.abbr, info.handle]) {
-          if (id) lookup[id.toUpperCase()] = colors;
-        }
-      }
-
-      rosterCache = lookup;
-      return lookup;
+      rosterCache = buildRosterLookup(data);
+      return rosterCache;
     } catch {
       rosterCache = {};
       return {};
     }
-  }
-
-  function colorsFor(roster, id) {
-    return (id && roster[id.toUpperCase()]) || DEFAULT_COLORS;
   }
 
   let indexCache = null;
@@ -273,55 +235,6 @@
     const data = await res.json();
     indexCache = data.map(e => ({ num: e.num, title: e.title, date: e.date }));
     return indexCache;
-  }
-
-  function parseChatlog(chatlogText, roster) {
-    // Parse pesterlog/dialog format using roster data for colors
-    const lines = chatlogText.split('\n');
-    const elements = [];
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-
-      // Check for empty lines - preserve them as blank lines
-      if (!trimmed) {
-        elements.push({
-          type: 'blank'
-        });
-        continue;
-      }
-
-      // Check for header/footer lines (-- text --)
-      if (trimmed.startsWith('--') && trimmed.endsWith('--')) {
-        elements.push({
-          type: 'header',
-          text: trimmed,
-          roster: roster
-        });
-        continue;
-      }
-
-      // Check for dialogue line: HANDLE: text (without brackets)
-      const dialogueMatch = trimmed.match(/^([A-Z]+):\s*(.*)$/);
-      if (dialogueMatch) {
-        const [, handle, text] = dialogueMatch;
-        elements.push({
-          type: 'dialogue',
-          handle: handle,
-          text: text,
-          colors: colorsFor(roster, handle)
-        });
-        continue;
-      }
-
-      // Plain text line
-      elements.push({
-        type: 'text',
-        text: trimmed
-      });
-    }
-
-    return elements;
   }
 
   async function renderContentAsHtml(text) {
@@ -756,24 +669,6 @@
 
     if (myToken !== currentRenderToken) return;
     app.append(lightModeToggle);
-  }
-
-  // Date formatting utilities
-  function parseDate(dateStr) {
-    // Input: MM-DD-YYYY
-    const [month, day, year] = dateStr.split('-').map(s => parseInt(s, 10));
-    return new Date(year, month - 1, day);
-  }
-
-  function formatDate(dateStr, format) {
-    if (!dateStr) return '';
-    const [month, day, year] = dateStr.split('-');
-    switch (format) {
-      case 'MM-DD-YYYY': return `${month}/${day}/${year}`;
-      case 'DD-MM-YYYY': return `${day}/${month}/${year}`;
-      case 'YYYY-MM-DD': return `${year}/${month}/${day}`;
-      default: return `${month}/${day}/${year}`;
-    }
   }
 
   // Discover all available pages

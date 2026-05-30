@@ -1,0 +1,202 @@
+// Unit tests for the pure helpers in js/lib.mjs.
+// Run with: npm test   (which runs `node --test`)
+
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+
+import {
+  DEFAULT_COLORS,
+  parseTxtFile,
+  parseTxtMeta,
+  buildRosterLookup,
+  colorsFor,
+  parseChatlog,
+  formatDate,
+  parseDate,
+  parsePageNumber,
+  boolFromEnv,
+} from '../js/lib.mjs';
+
+// ─── parseTxtFile ──────────────────────────────────────────────────────────
+
+test('parseTxtFile: title, date, and content from a standard page', () => {
+  const txt = 'Null and Void\n11-10-2025\n------\nAlone in his room.\nA new day.';
+  assert.deepEqual(parseTxtFile(txt), {
+    title: 'Null and Void',
+    date: '11-10-2025',
+    content: 'Alone in his room.\nA new day.',
+  });
+});
+
+test('parseTxtFile: no date line leaves date null and keeps content after separator', () => {
+  const txt = 'Some Title\n------\nBody line';
+  assert.deepEqual(parseTxtFile(txt), {
+    title: 'Some Title',
+    date: null,
+    content: 'Body line',
+  });
+});
+
+test('parseTxtFile: normalizes CRLF line endings', () => {
+  const txt = 'Title\r\n01-02-2026\r\n------\r\nLine one\r\nLine two';
+  const { title, date, content } = parseTxtFile(txt);
+  assert.equal(title, 'Title');
+  assert.equal(date, '01-02-2026');
+  assert.equal(content, 'Line one\nLine two');
+});
+
+test('parseTxtFile: trims surrounding whitespace on title and content', () => {
+  const txt = '  Spaced Title  \n------\n\n  padded body  \n';
+  const { title, content } = parseTxtFile(txt);
+  assert.equal(title, 'Spaced Title');
+  assert.equal(content, 'padded body');
+});
+
+test('parseTxtFile: a line-2 string that is not a date is treated as content, not a date', () => {
+  const txt = 'Title\nnot a date\n------\nbody';
+  const { date, content } = parseTxtFile(txt);
+  assert.equal(date, null);
+  assert.equal(content, 'body');
+});
+
+// ─── parseTxtMeta ──────────────────────────────────────────────────────────
+
+test('parseTxtMeta: returns just title and date', () => {
+  const txt = 'My Title\n12-25-2025\n------\nbody we ignore';
+  assert.deepEqual(parseTxtMeta(txt), { title: 'My Title', date: '12-25-2025' });
+});
+
+test('parseTxtMeta: date null when line 2 is not a date', () => {
+  assert.deepEqual(parseTxtMeta('Title\n------\nbody'), { title: 'Title', date: null });
+});
+
+// ─── buildRosterLookup ───────────────────────────────────────────────────────
+
+test('buildRosterLookup: keys by upper-cased name, abbr, and handle', () => {
+  const lookup = buildRosterLookup({
+    Kai: { handle: 'cyanusViator', abbr: 'CV', dark: '#00d5f0', light: '#007a8a' },
+  });
+  const expected = { dark: '#00d5f0', light: '#007a8a' };
+  assert.deepEqual(lookup['KAI'], expected);
+  assert.deepEqual(lookup['CV'], expected);
+  assert.deepEqual(lookup['CYANUSVIATOR'], expected);
+});
+
+test('buildRosterLookup: light falls back to dark, dark falls back to default', () => {
+  const lookup = buildRosterLookup({
+    Mono: { dark: '#abcdef' },          // no light → light = dark
+    Ghost: { light: '#123456' },        // no dark → dark = default, light kept
+  });
+  assert.deepEqual(lookup['MONO'], { dark: '#abcdef', light: '#abcdef' });
+  assert.deepEqual(lookup['GHOST'], { dark: DEFAULT_COLORS.dark, light: '#123456' });
+});
+
+test('buildRosterLookup: tolerates null/empty input', () => {
+  assert.deepEqual(buildRosterLookup(null), {});
+  assert.deepEqual(buildRosterLookup({}), {});
+});
+
+// ─── colorsFor ────────────────────────────────────────────────────────────
+
+test('colorsFor: case-insensitive lookup, default when missing or null', () => {
+  const roster = { KAI: { dark: '#111', light: '#222' } };
+  assert.deepEqual(colorsFor(roster, 'kai'), { dark: '#111', light: '#222' });
+  assert.deepEqual(colorsFor(roster, 'NOBODY'), DEFAULT_COLORS);
+  assert.deepEqual(colorsFor(roster, null), DEFAULT_COLORS);
+});
+
+// ─── parseChatlog ─────────────────────────────────────────────────────────
+
+test('parseChatlog: classifies blank, header, dialogue, and plain text lines', () => {
+  const roster = { CV: { dark: '#00d5f0', light: '#007a8a' } };
+  const log = [
+    '-- cyanusViator [CV] began pestering --',
+    '',
+    'CV: hello there',
+    'just some narration',
+  ].join('\n');
+
+  const els = parseChatlog(log, roster);
+  assert.equal(els[0].type, 'header');
+  assert.equal(els[0].text, '-- cyanusViator [CV] began pestering --');
+  assert.equal(els[1].type, 'blank');
+  assert.equal(els[2].type, 'dialogue');
+  assert.equal(els[2].handle, 'CV');
+  assert.equal(els[2].text, 'hello there');
+  assert.deepEqual(els[2].colors, { dark: '#00d5f0', light: '#007a8a' });
+  assert.equal(els[3].type, 'text');
+  assert.equal(els[3].text, 'just some narration');
+});
+
+test('parseChatlog: unknown handle gets default colors', () => {
+  const [line] = parseChatlog('XX: who am i', {});
+  assert.equal(line.type, 'dialogue');
+  assert.deepEqual(line.colors, DEFAULT_COLORS);
+});
+
+// ─── formatDate ───────────────────────────────────────────────────────────
+
+test('formatDate: reorders MM-DD-YYYY into each supported display format', () => {
+  assert.equal(formatDate('11-10-2025', 'MM-DD-YYYY'), '11/10/2025');
+  assert.equal(formatDate('11-10-2025', 'DD-MM-YYYY'), '10/11/2025');
+  assert.equal(formatDate('11-10-2025', 'YYYY-MM-DD'), '2025/11/10');
+});
+
+test('formatDate: empty input yields empty string; unknown format falls back to MM/DD/YYYY', () => {
+  assert.equal(formatDate('', 'MM-DD-YYYY'), '');
+  assert.equal(formatDate(null, 'MM-DD-YYYY'), '');
+  assert.equal(formatDate('11-10-2025', 'bogus'), '11/10/2025');
+});
+
+// ─── parseDate ────────────────────────────────────────────────────────────
+
+test('parseDate: builds a Date with month zero-indexed', () => {
+  const d = parseDate('11-10-2025');
+  assert.equal(d.getFullYear(), 2025);
+  assert.equal(d.getMonth(), 10); // November
+  assert.equal(d.getDate(), 10);
+});
+
+// ─── parsePageNumber ──────────────────────────────────────────────────────
+
+test('parsePageNumber: reads the trailing numeric path segment', () => {
+  assert.equal(parsePageNumber('/story/1', ''), 1);
+  assert.equal(parsePageNumber('/42', ''), 42);
+  assert.equal(parsePageNumber('/story/7/', ''), 7); // trailing slash tolerated
+});
+
+test('parsePageNumber: non-numeric or rootless paths yield null', () => {
+  assert.equal(parsePageNumber('/', ''), null);
+  assert.equal(parsePageNumber('/log', ''), null);
+  assert.equal(parsePageNumber('/map', ''), null);
+});
+
+test('parsePageNumber: falls back to #/ hash routes', () => {
+  assert.equal(parsePageNumber('/', '#/story/5'), 5);
+  assert.equal(parsePageNumber('/', '#/3'), 3);
+  assert.equal(parsePageNumber('/', '#/log'), null);
+});
+
+test('parsePageNumber: pathname number takes precedence over hash', () => {
+  assert.equal(parsePageNumber('/story/2', '#/story/9'), 2);
+});
+
+// ─── boolFromEnv ──────────────────────────────────────────────────────────
+
+test('boolFromEnv: recognizes common truthy strings, case/space-insensitively', () => {
+  for (const v of ['1', 'true', 'TRUE', 'yes', 'on', ' on ']) {
+    assert.equal(boolFromEnv(v), true, `expected ${JSON.stringify(v)} to be true`);
+  }
+});
+
+test('boolFromEnv: everything else is false', () => {
+  for (const v of ['0', 'false', 'no', 'off', '', 'maybe']) {
+    assert.equal(boolFromEnv(v), false, `expected ${JSON.stringify(v)} to be false`);
+  }
+});
+
+test('boolFromEnv: null/undefined returns the provided default', () => {
+  assert.equal(boolFromEnv(undefined), false);
+  assert.equal(boolFromEnv(null), false);
+  assert.equal(boolFromEnv(undefined, true), true);
+});
