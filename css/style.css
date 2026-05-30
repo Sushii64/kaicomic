@@ -1,0 +1,463 @@
+/* ── Reset & Base ──────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: #0a0e17;
+  color: #d0d0d0;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+body.transitioning * {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* ── Links ─────────────────────────────────────────────────────────────────── */
+
+a               { color: #5b9bd5; text-decoration: underline; }
+a:hover         { color: #7ab8e8; }
+a:visited       { color: #a68dd5; }
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+
+.site-header {
+  background: #12161f;
+  border-bottom: 1px solid #2a2f3a;
+}
+.site-header .container {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.site-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #e8e8e8;
+  font-family: Courier, "Courier New", monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ── Under-header nav ──────────────────────────────────────────────────────── */
+
+.under-header.container {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  border-bottom: 1px solid #2a2f3a;
+}
+.under-header a {
+  color: #5b9bd5;
+  font-size: 18px;
+}
+
+/* ── Light-mode toggle ─────────────────────────────────────────────────────── */
+
+.light-mode-toggle {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+}
+.light-mode-toggle a {
+  color: #5b9bd5;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────────── */
+
+.container {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.panel {
+  background: #0a0e17;
+  border: none;
+  padding: 24px 18px;
+}
+
+/* ── Panel titles ──────────────────────────────────────────────────────────── */
+
+.panel__title,
+.panel__title.title {
+  margin: 0 0 25px 0;
+  font-size: 32px;
+  font-weight: bold;
+  color: #e8e8e8;
+  text-align: center;
+  font-family: Courier, "Courier New", monospace;
+  letter-spacing: 0.5px;
+}
+
+.panel__subtitle {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: normal;
+  color: #d0d0d0;
+  text-align: center;
+  font-family: Courier, "Courier New", monospace;
+  letter-spacing: 0.3px;
+}
+
+/* ── Image ─────────────────────────────────────────────────────────────────── */
+
+.image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 24px auto;
+  image-rendering: auto;
+  border: 1px solid #2a2f3a;
+}
+
+/* ── Text content ──────────────────────────────────────────────────────────── */
+
+.content {
+  margin: 24px auto;
+  max-width: 700px;
+  text-align: center;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  color: #d0d0d0;
+}
+.content p {
+  margin: 0 0 1em 0;
+}
+
+/* ── Command link ──────────────────────────────────────────────────────────── */
+
+.command-link {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 1.5;
+  color: #e8e8e8;
+  margin: 30px 0 18px 0;
+  font-family: Courier, "Courier New", monospace;
+  letter-spacing: 0.3px;
+}
+.command-link a       { color: #5b9bd5; text-decoration: underline; }
+.command-link a:hover { color: #7ab8e8; }
+
+/* ── Position controls ─────────────────────────────────────────────────────── */
+
+.position-controls {
+  margin-top: 1rem;
+  font-size: 16px;
+}
+.position-controls a { cursor: pointer; }
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-block;
+  background: #1a1f2a;
+  color: #e8e8e8;
+  font-weight: bold;
+  padding: 12px 24px;
+  border: 1px solid #4a4a4a;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+.btn:hover  { background: #252a35; color: #e8e8e8; border-color: #5a5a5a; }
+.btn:active { background: #303540; }
+
+/* ── Select dropdowns ──────────────────────────────────────────────────────── */
+
+select,
+.date-format-select {
+  background: #1a1f2a;
+  color: #e8e8e8;
+  border: 1px solid #4a4a4a;
+  padding: 8px 12px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0;
+}
+select:hover,
+.date-format-select:hover { background: #252a35; border-color: #5a5a5a; }
+select:focus,
+.date-format-select:focus { outline: none; border-color: #5b9bd5; }
+select option             { background: #1a1f2a; color: #e8e8e8; }
+
+/* ── Home page ─────────────────────────────────────────────────────────────── */
+
+.home { text-align: center; }
+
+.disclaimer {
+  margin: 24px 0;
+  font-size: 18px;
+  color: #d0d0d0;
+  line-height: 1.6;
+}
+
+.actions { margin-top: 28px; }
+
+.hash-fallback {
+  margin-top: 18px;
+  font-size: 15px;
+  color: #888888;
+  text-align: center;
+}
+
+.loading {
+  color: #888888;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* ── Chatlog & Dialog blocks ────────────────────────────────────────────────
+ *
+ * Both block types (.chatlog and .dialog) share the same layout and coloring
+ * logic. Differentiate them visually in CSS here if you want them to look
+ * different (e.g. different border color, font, background).
+ *
+ * Colors on individual spans are set via JS as inline styles (data-dark-color
+ * / data-light-color attributes are read by applyChatlogColors()). CSS here
+ * provides the base layer and structure only.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.chatlog,
+.dialog {
+  background: #0d1117;
+  border: 1px solid #2a2f3a;
+  padding: 16px;
+  margin: 24px auto;
+  max-width: 700px;
+  font-family: Courier, "Courier New", monospace;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* Collapse button — shared base */
+.chatlog-collapse-btn,
+.dialog-collapse-btn {
+  display: block;
+  margin: 0 auto 12px auto;
+  background: #1a1f2a;
+  color: #e8e8e8;
+  border: 1px solid #4a4a4a;
+  padding: 6px 16px;
+  font-family: Courier, "Courier New", monospace;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.chatlog-collapse-btn:hover,
+.dialog-collapse-btn:hover { background: #252a35; border-color: #5a5a5a; }
+
+/* Auto-generated block types (e.g. .flashback, .memory, etc.)
+ * get the same base styles via this selector pattern.
+ * If you want to override a specific block type, target it by class name. */
+[class$="-collapse-btn"] {
+  display: block;
+  margin: 0 auto 12px auto;
+  background: #1a1f2a;
+  color: #e8e8e8;
+  border: 1px solid #4a4a4a;
+  padding: 6px 16px;
+  font-family: Courier, "Courier New", monospace;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+[class$="-collapse-btn"]:hover { background: #252a35; border-color: #5a5a5a; }
+
+/* Content wrappers */
+.chatlog-content,
+.dialog-content {
+  display: block;
+}
+
+/* Lines */
+.chatlog-line {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.chatlog-blank {
+  margin: 0;
+  line-height: 1.4;
+  height: 1.4em;
+}
+
+/* Header lines (-- ... --) and plain text lines inside blocks */
+.chatlog-header {
+  margin: 8px 0;
+  line-height: 1.4;
+  color: #d0d0d0; /* fallback; individual colored spans override */
+}
+
+/* Handle, text, and header-tag spans — JS sets .style.color via applyChatlogColors().
+ * These rules provide font treatment and display only. */
+.chatlog-handle {
+  font-weight: bold;
+  display: inline;
+}
+
+.chatlog-text {
+  display: inline;
+}
+
+/* "cyanusViator [CV]" colored token inside header lines */
+.chatlog-handle-tag {
+  font-weight: bold;
+}
+
+/* ── Inline [ABBR]text[/ABBR] tag ────────────────────────────────────────────
+ *
+ * Can appear anywhere in page content. JS resolves the abbr to roster colors
+ * and sets inline style. This CSS just sets the font treatment.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.inline-handle {
+  font-family: Courier, "Courier New", monospace;
+  font-weight: bold;
+}
+
+/* ── Ruffle / SWF media ─────────────────────────────────────────────────────── */
+
+.image .media-frame {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  margin: 24px auto;
+  border: 1px solid #2a2f3a;
+}
+
+.image .media-frame.media-frame--swf {
+  width: 652px;
+  max-width: 100%;
+  aspect-ratio: 652 / 452;
+  background: #000;
+}
+
+.image .media-frame.media-frame--swf ruffle-player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.image .media-frame .media-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 16px;
+  color: #d0d0d0;
+  background: rgba(0, 0, 0, 0.65);
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+.image .media-frame .media-overlay button {
+  appearance: none;
+  background: #1a1f2a;
+  color: #e8e8e8;
+  font-weight: bold;
+  padding: 10px 18px;
+  border: 1px solid #4a4a4a;
+  cursor: pointer;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+.image .media-frame .media-overlay button:hover { background: #252a35; border-color: #5a5a5a; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 520px) {
+  body            { font-size: 16px; }
+  .container      { padding: 18px; }
+  .panel          { padding: 18px 12px; }
+  .panel__title   { font-size: 24px; }
+  .panel__subtitle{ font-size: 20px; }
+  .command-link   { font-size: 18px; }
+  .content        { font-size: 16px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE
+   All light-mode overrides in one place.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+body.light-mode {
+  background: #f5f5f5;
+  color: #2a2a2a;
+}
+
+/* Header */
+body.light-mode .site-header              { background: #e8e8e8; border-bottom-color: #c0c0c0; }
+body.light-mode .site-title               { color: #1a1a1a; }
+body.light-mode .under-header.container   { border-bottom-color: #c0c0c0; }
+
+/* Links */
+body.light-mode a         { color: #2563eb; }
+body.light-mode a:hover   { color: #1d4ed8; }
+body.light-mode a:visited { color: #7c3aed; }
+
+/* Panel */
+body.light-mode .panel          { background: #f5f5f5; }
+body.light-mode .panel__title,
+body.light-mode .panel__title.title { color: #1a1a1a; }
+body.light-mode .panel__subtitle{ color: #2a2a2a; }
+body.light-mode .content        { color: #2a2a2a; }
+body.light-mode .command-link   { color: #1a1a1a; }
+
+/* Buttons */
+body.light-mode .btn        { background: #e8e8e8; color: #1a1a1a; border-color: #c0c0c0; }
+body.light-mode .btn:hover  { background: #d8d8d8; border-color: #a0a0a0; }
+body.light-mode .btn:active { background: #c8c8c8; }
+
+/* Selects */
+body.light-mode select,
+body.light-mode .date-format-select        { background: #ffffff; color: #1a1a1a; border-color: #c0c0c0; }
+body.light-mode select:hover,
+body.light-mode .date-format-select:hover  { background: #f5f5f5; border-color: #a0a0a0; }
+body.light-mode select option              { background: #ffffff; color: #1a1a1a; }
+
+/* Image */
+body.light-mode .image img { border-color: #c0c0c0; }
+
+/* Text */
+body.light-mode .disclaimer               { color: #2a2a2a; }
+body.light-mode .hash-fallback,
+body.light-mode .loading                  { color: #666666; }
+
+/* Chatlog/dialog blocks */
+body.light-mode .chatlog,
+body.light-mode .dialog                   { background: #ffffff; border-color: #c0c0c0; }
+
+body.light-mode .chatlog-collapse-btn,
+body.light-mode .dialog-collapse-btn,
+body.light-mode [class$="-collapse-btn"]  { background: #e8e8e8; color: #1a1a1a; border-color: #c0c0c0; }
+
+body.light-mode .chatlog-collapse-btn:hover,
+body.light-mode .dialog-collapse-btn:hover,
+body.light-mode [class$="-collapse-btn"]:hover { background: #d8d8d8; border-color: #a0a0a0; }
+
+body.light-mode .chatlog-header           { color: #2a2a2a; }
+
+/* Ruffle */
+body.light-mode .image .media-frame             { border-color: #c0c0c0; }
+body.light-mode .image .media-frame .media-overlay {
+  color: #2a2a2a;
+  background: rgba(245, 245, 245, 0.85);
+}

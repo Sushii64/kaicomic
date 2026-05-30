@@ -1,0 +1,46 @@
+{
+  "Kai": {
+    "handle": "cyanusViator",
+    "abbr": "CV",
+    "dark": "#00d5f0",
+    "light": "#007a8a"
+  },
+  "Scott": {
+    "handle": "aquaFallax",
+    "abbr": "AF",
+    "dark": "#8EFFCA",
+    "light": "#20b86d"
+  },
+  "Liam": {
+    "handle": "silensInterlucet",
+    "abbr": "SI",
+    "dark": "#00F608",
+    "light": "#00a005"
+  },
+  "Katie": {
+    "handle": "dulcisVelamen",
+    "abbr": "DV",
+    "dark": "#fff200",
+    "light": "#c4b300"
+  },
+  "Jane": {
+    "handle": "astraMinutus",
+    "abbr": "AM",
+    "dark": "#adebb3",
+    "light": "#4d9e5c"
+  },
+  "studiumTenebris": {
+    "handle": "studiumTenebris",
+    "abbr": "ST",
+    "dark": "#E0C6FF",
+    "light": "#8a5fc7"
+  },
+  "Tau": {
+    "dark": "#fffce3",
+    "light": "#ccc697"
+  },
+  "Nytes": {
+    "dark": "#e63b7a",
+    "light": "#e63b7a"
+  }
+}

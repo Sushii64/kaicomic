@@ -1,0 +1,28 @@
+~~>
+27-10-2025
+------
+Just as you were about to get off, someone else starts messaging you! You’ve never seen this person before. You open up the message and start talking to them.
+
+[CHATLOG START]
+-- astraMinutus [AM] commenced chatting with cyanusViator [CV] --
+
+AM: Hello.
+CV: um... hi?
+AM: I’ve heard about you.
+AM: You want to be an “adventurer,” no?
+CV: hhow do you know that
+CV: did my brother tell you
+AM: I can’t tell you about my sources yet.
+CV: ...
+CV: okay..?
+AM: I’m going to need you to head toward Beachside.
+CV: where’s that
+AM: West.
+AM: Go west.
+CV: why
+AM: Adventure :)
+CV: okay... i guess.
+AM: I hope to see you soon, Kai.
+
+-- astraMinutus [AM] concluded chatting with cyanusViator [CV] --
+[CHATLOG END]

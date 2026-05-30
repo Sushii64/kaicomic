@@ -1,0 +1,7 @@
+KAI: #00F2FF #00a8b8
+SCOTT: #8EFFCA #20b86d
+LIAM: #00F608 #00a005
+KATIE: #fff200 #c4b300
+JANE: #adebb3 #4d9e5c
+TAU: #fffce3 #ccc697
+NYTES: #e63b7a #e63b7a

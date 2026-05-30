@@ -1,0 +1,9 @@
+Kai: Enter the testing environment.
+27-01-2026
+------
+[DIALOG START]
+KAI: wh
+JANE: You should figure this out pretty simply.
+[DIALOG END]
+
+She’s right. This puzzle is barely a puzzle at all. What is she even testing?

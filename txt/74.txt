@@ -1,0 +1,14 @@
+~~>
+27-01-2026
+------
+You let Kai inside.
+
+[DIALOG START]
+KAI: umm...
+KAI: hello
+JANE: Good afternoon.
+JANE: Please, come inside.
+KAI: ok
+JANE: Let us prepare your testing.
+KAI: wut
+[DIALOG END]

@@ -1,0 +1,11 @@
+Jane: Get Kai.
+02-03-2026
+------
+[DIALOG START]
+JANE: Kai?
+KAI: ?
+JANE: You don’t need to wear that anymore.
+JANE: The wall to your right will open up in a bit.
+JANE: Go inside.
+KAI: umm, alright
+[DIALOG END]

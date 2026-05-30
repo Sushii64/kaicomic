@@ -1,0 +1,12 @@
+Jane: Put Kai in the proper attire.
+27-01-2026
+------
+It’s just a shirt, but okay.
+
+[DIALOG START]
+KAI: whats this
+JANE: Shirt.
+KAI: why
+JANE: Testing.
+KAI: ??
+[DIALOG END]

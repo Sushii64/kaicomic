@@ -1,0 +1,42 @@
+Kai: Make use of modern communication technology.
+27-10-2025
+------
+Your BIG BRO is messaging you via the program Chatterbox. You use it to talk to all your friends and family when you can't talk to them in person. You open it up and see what he's trying to tell you.
+
+[CHATLOG START]
+-- aquaFallax [AF] commenced chatting with cyanusViator [CV] --
+
+AF: hey
+CV: hi :)
+AF: what are you doing rn
+CV: getting ready to go
+AF: where
+CV: i don't know
+AF: really
+AF: sounds kinda lame
+CV: oh hush
+CV: you know i've always wanted to go on an adventure
+AF: have you not already gone on several
+CV: yeah but
+CV: like
+CV: a real adventure
+CV: outside of GL
+AF: how are you planning on doing that
+CV: on foot
+AF: dude
+AF: just learn to drive
+AF: it's so much easier
+CV: no
+CV: that's less fun
+CV: btw do you know where my phone is
+AF: i havent seen it
+CV: hm
+CV: why are you messaging me anyway
+CV: you're right outside just come inside and talk to me
+AF: lazy
+CV: alright whatever
+CV: im gonna get off my computer now bye
+AF: cya
+
+-- cyanusViator [CV] concluded chatting with aquaFallax [AF] --
+[CHATLOG END]

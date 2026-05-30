@@ -1,0 +1,6 @@
+cyanusViator [CV]: #00F2FF #00a8b8
+aquaFallax [AF]: #8EFFCA #20b86d
+silensInterlucet [SI]: #00F608 #00a005
+dulcisVelamen [DV]: #fff200 #c4b300
+astraMinutus [AM]: #adebb3 #4d9e5c
+studiumTenebris [ST]: #E0C6FF #8a5fc7
