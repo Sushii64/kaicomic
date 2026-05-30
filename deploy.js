@@ -156,6 +156,7 @@ async function buildSite() {
   // Copy static assets
   const filesToCopy = [
     { src: 'index.html',          dest: path.join(dist, 'index.html') },
+    { src: '404.html',            dest: path.join(dist, '404.html') },
     { src: '.htaccess',           dest: path.join(dist, '.htaccess') },
     { src: 'favicon.ico',         dest: path.join(dist, 'favicon.ico') },
     { src: 'favicon-32x32.png',   dest: path.join(dist, 'favicon-32x32.png') },

@@ -3,6 +3,10 @@ Options -MultiViews
 
 DirectoryIndex index.html
 
+# Genuine 404s (e.g. a missing /txt/ or /img/ asset, which the rules below do
+# not rewrite) serve 404.html, which redirects deep links to the SPA hash route.
+ErrorDocument 404 /404.html
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
