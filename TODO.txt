@@ -4,7 +4,6 @@
     - will color it with the right color and give it the monospace font
     - feel free to change the syntax however you wish
 - in chatlogs, it only colors the [CV] pattern but like Homestuck it should color the whole "cyanusViator [CV]" thing
-- shore up prod webpack config (npm run build has copyplugin patterns for files that don't exist)
 - fix broken ruffle unmute UI
 - currently text paints in default color then recolors, fix to just paint the right color immediately
 - make global click handler less fragile
