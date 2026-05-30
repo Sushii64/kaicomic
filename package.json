@@ -8,6 +8,7 @@
   ],
   "license": "",
   "author": "",
+  "packageManager": "pnpm@11.3.0",
   "scripts": {
     "test": "node --test",
     "start": "webpack serve --open --config webpack.config.dev.js",
