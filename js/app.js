@@ -6,6 +6,7 @@ import {
   formatDate,
   parsePageNumber,
   formatPageTitle,
+  nextPageEntry,
 } from './lib.mjs';
 
 (function () {
@@ -236,6 +237,16 @@ import {
     const data = await res.json();
     indexCache = data.map(e => ({ num: e.num, title: e.title, date: e.date }));
     return indexCache;
+  }
+
+  // Index accessor that never throws: returns null when the index is
+  // unavailable so callers can fall back to probing pages directly.
+  async function getIndexSafe() {
+    try {
+      return await fetchIndex();
+    } catch {
+      return null;
+    }
   }
 
   async function renderContentAsHtml(text) {
@@ -591,19 +602,31 @@ import {
       // Apply chatlog colors after rendering
       setTimeout(() => applyChatlogColors(), 0);
 
-      // Command link (big) placed right under the text
-      try {
-        const next = await fetchTxt(n + 1);
+      // Command link (big) placed right under the text. Use the pre-built
+      // index to learn the next page's title and existence; only probe the
+      // page directly (legacy behavior) if the index can't be loaded.
+      let nextTitle = null;
+      const index = await getIndexSafe();
+      if (index) {
+        const entry = nextPageEntry(index, n);
+        if (entry) nextTitle = entry.title || `Page ${n + 1}`;
+      } else {
+        try {
+          const next = await fetchTxt(n + 1);
+          nextTitle = next.title || `Page ${n + 1}`;
+        } catch (_) {
+          // No next page
+        }
+      }
+      if (myToken === currentRenderToken && nextTitle != null) {
         const cmdLink = h('div', { class: 'command-link' },
           '> ',
           h('a', {
             href: `/story/${n + 1}`,
             onClick: (e) => { if (!navigateTo(`/story/${n + 1}`, e)) e.preventDefault(); }
-          }, next.title || `Page ${n + 1}`)
+          }, nextTitle)
         );
         panel.append(cmdLink);
-      } catch (_) {
-        // No next page
       }
 
       // Navigation links and position controls
@@ -904,9 +927,17 @@ import {
     if (!currentPage) return;
 
     if (event.key === 'ArrowRight') {
-      fetchTxt(currentPage + 1)
-        .then(() => navigateTo(`/story/${currentPage + 1}`))
-        .catch(() => {}); // Prevent navigation if next page doesn't exist
+      // Consult the (cached) index for the next page instead of fetching it.
+      getIndexSafe().then((index) => {
+        if (index) {
+          if (nextPageEntry(index, currentPage)) navigateTo(`/story/${currentPage + 1}`);
+        } else {
+          // No index, so fall back to probing the page directly.
+          fetchTxt(currentPage + 1)
+            .then(() => navigateTo(`/story/${currentPage + 1}`))
+            .catch(() => {});
+        }
+      });
     } else if (event.key === 'ArrowLeft' && currentPage > 1) {
       navigateTo(`/story/${currentPage - 1}`);
     }

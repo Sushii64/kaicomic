@@ -143,6 +143,21 @@ export function parsePageNumber(pathname, hash) {
   return null;
 }
 
+// Look up a page index entry ([{ num, title, date }, ...]) by page number.
+// Returns the matching entry or null. Lets callers use the pre-built
+// txt/index.json instead of re-fetching a page's .txt just to learn its
+// title or whether it exists.
+export function findPageEntry(index, n) {
+  if (!index) return null;
+  return index.find(e => e.num === n) || null;
+}
+
+// The entry for the page after n, or null when n is the last page (or n+1 is
+// missing from the index).
+export function nextPageEntry(index, n) {
+  return findPageEntry(index, n + 1);
+}
+
 // Interpret an environment-variable-style truthy string.
 export function boolFromEnv(value, def = false) {
   if (value == null) return def;

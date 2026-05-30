@@ -17,6 +17,8 @@ import {
   boolFromEnv,
   formatPageTitle,
   SITE_TITLE,
+  findPageEntry,
+  nextPageEntry,
 } from '../js/lib.mjs';
 
 // ─── formatPageTitle ─────────────────────────────────────────────────────────
@@ -41,6 +43,41 @@ test('formatPageTitle: does not double up when the title already is the site nam
   // Page 1's title in txt/1.txt is literally "Null and Void" (the site name);
   // showing "Null and Void - Null and Void" would be silly.
   assert.equal(formatPageTitle(SITE_TITLE), SITE_TITLE);
+});
+
+// ─── findPageEntry / nextPageEntry ───────────────────────────────────────────
+
+const INDEX = [
+  { num: 1, title: 'Null and Void', date: '11-10-2025' },
+  { num: 2, title: 'A new day', date: '11-11-2025' },
+  { num: 3, title: 'ACT 2', date: '04-05-2026' },
+];
+
+test('findPageEntry: returns the entry whose num matches', () => {
+  assert.deepEqual(findPageEntry(INDEX, 2), { num: 2, title: 'A new day', date: '11-11-2025' });
+});
+
+test('findPageEntry: returns null when the number is absent', () => {
+  assert.equal(findPageEntry(INDEX, 99), null);
+});
+
+test('findPageEntry: tolerates null/empty index', () => {
+  assert.equal(findPageEntry(null, 1), null);
+  assert.equal(findPageEntry([], 1), null);
+});
+
+test('nextPageEntry: returns the entry for n+1', () => {
+  assert.deepEqual(nextPageEntry(INDEX, 1), { num: 2, title: 'A new day', date: '11-11-2025' });
+});
+
+test('nextPageEntry: returns null when n is the last page', () => {
+  assert.equal(nextPageEntry(INDEX, 3), null);
+});
+
+test('nextPageEntry: returns null for a gap in numbering', () => {
+  // index missing num 2 → page 1 has no immediate next
+  const gapped = [{ num: 1, title: 'a' }, { num: 3, title: 'c' }];
+  assert.equal(nextPageEntry(gapped, 1), null);
 });
 
 // ─── parseTxtFile ──────────────────────────────────────────────────────────
