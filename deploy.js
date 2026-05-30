@@ -10,6 +10,7 @@
 //   node deploy.js --skip-deploy             - Build only, don't deploy
 //   node deploy.js --preserve-dist           - Keep dist/ folder after deployment
 //   node deploy.js --modified-only           - Only upload modified/new files
+//   node deploy.js --index-only              - Only regenerate txt/index.json, then stop
 //   node deploy.js --clean --obfuscate       - Combine multiple flags
 //
 // Arguments:
@@ -18,6 +19,7 @@
 //   --skip-deploy    Only build locally, skip FTP upload step
 //   --preserve-dist  Don't delete dist/ folder after successful deployment
 //   --modified-only  Only upload files that differ from the server or are new
+//   --index-only     Only (re)generate txt/index.json, skipping build and deploy
 //
 // Config via .env or environment variables:
 //   FTP_HOST, FTP_PORT, FTP_USER, FTP_PASSWORD, FTP_SECURE, FTP_TLS_INSECURE
@@ -43,6 +45,7 @@ function parseArgs() {
     skipDeploy: args.has('--skip-deploy'),
     preserveDist: args.has('--preserve-dist'),
     modifiedOnly: args.has('--modified-only'),
+    indexOnly: args.has('--index-only'),
   };
 }
 
@@ -461,7 +464,23 @@ async function deploy() {
 
 (async function main() {
   try {
-    const { obfuscate, skipDeploy, preserveDist } = parseArgs();
+    const { obfuscate, skipDeploy, preserveDist, indexOnly } = parseArgs();
+
+    // --index-only: just (re)generate txt/index.json and stop. Handy while
+    // adding pages locally, as the app probes pages directly so it doesn't need
+    // this, but the Log view reads the index, so regenerate it when convenient
+    // without a full build/deploy.
+    if (indexOnly) {
+      const localTxtDir = path.resolve('txt');
+      if (await pathExists(localTxtDir)) {
+        await generatePageIndex(localTxtDir, path.join(localTxtDir, 'index.json'));
+      } else {
+        console.warn('txt/ directory not found — nothing to index.');
+      }
+      console.log('Index generated (--index-only). Done.');
+      return;
+    }
+
     await buildSite();
 
     if (obfuscate) {

@@ -7,7 +7,6 @@ import {
   formatDate,
   parsePageNumber,
   formatPageTitle,
-  nextPageEntry,
 } from './lib.mjs';
 
 (function () {
@@ -241,6 +240,19 @@ import {
     return parseTxtFile(text);
   }
 
+  // Resolve the next page's title by probing its .txt directly, returning null
+  // when there's no next page. Probing — rather than consulting txt/index.json —
+  // means a freshly-added page is picked up by the command link and arrow
+  // navigation without having to regenerate the index first.
+  async function fetchNextTitle(n) {
+    try {
+      const next = await fetchTxt(n + 1);
+      return next.title || `Page ${n + 1}`;
+    } catch {
+      return null;
+    }
+  }
+
   let rosterCache = null;
 
   // Load the unified character roster (txt/roster.json) and build a lookup keyed by every identifier a speaker might be referenced by: the character name, their chat abbreviation, and their full handle (all upper-cased). This replaces the old chatterbox.txt + dialog.txt pair so chatlogs and dialog blocks pull their colors from the same file.
@@ -272,16 +284,6 @@ import {
     const data = await res.json();
     indexCache = data.map(e => ({ num: e.num, title: e.title, date: e.date }));
     return indexCache;
-  }
-
-  // Index accessor that never throws: returns null when the index is
-  // unavailable so callers can fall back to probing pages directly.
-  async function getIndexSafe() {
-    try {
-      return await fetchIndex();
-    } catch {
-      return null;
-    }
   }
 
   async function renderContentAsHtml(text) {
@@ -555,22 +557,10 @@ import {
       textWrap.append(contentHtml);
       panel.append(textWrap);
 
-      // Command link (big) placed right under the text. Use the pre-built
-      // index to learn the next page's title and existence; only probe the
-      // page directly (legacy behavior) if the index can't be loaded.
-      let nextTitle = null;
-      const index = await getIndexSafe();
-      if (index) {
-        const entry = nextPageEntry(index, n);
-        if (entry) nextTitle = entry.title || `Page ${n + 1}`;
-      } else {
-        try {
-          const next = await fetchTxt(n + 1);
-          nextTitle = next.title || `Page ${n + 1}`;
-        } catch (_) {
-          // No next page
-        }
-      }
+      // Command link (big) placed right under the text. Probe the next page's
+      // .txt directly to learn its title and existence, so a newly-added page
+      // links up without first regenerating txt/index.json.
+      const nextTitle = await fetchNextTitle(n);
       if (myToken === currentRenderToken && nextTitle != null) {
         const cmdLink = h('div', { class: 'command-link' },
           '> ',
@@ -808,16 +798,10 @@ import {
     if (!currentPage) return;
 
     if (event.key === 'ArrowRight') {
-      // Consult the (cached) index for the next page instead of fetching it.
-      getIndexSafe().then((index) => {
-        if (index) {
-          if (nextPageEntry(index, currentPage)) navigateTo(`/story/${currentPage + 1}`);
-        } else {
-          // No index, so fall back to probing the page directly.
-          fetchTxt(currentPage + 1)
-            .then(() => navigateTo(`/story/${currentPage + 1}`))
-            .catch(() => {});
-        }
+      // Probe the next page directly so newly-added pages are navigable without
+      // regenerating the index.
+      fetchNextTitle(currentPage).then((title) => {
+        if (title != null) navigateTo(`/story/${currentPage + 1}`);
       });
     } else if (event.key === 'ArrowLeft' && currentPage > 1) {
       navigateTo(`/story/${currentPage - 1}`);
