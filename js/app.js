@@ -3,6 +3,7 @@ import {
   buildRosterLookup,
   colorsFor,
   parseChatlog,
+  parseInlineHandles,
   formatDate,
   parsePageNumber,
   formatPageTitle,
@@ -55,7 +56,7 @@ import {
     const isLight = document.body.classList.contains('light-mode');
 
     // Apply colors to all chatlog elements
-    document.querySelectorAll('.chatlog-handle, .chatlog-text, .chatlog-handle-tag').forEach(el => {
+    document.querySelectorAll('.chatlog-handle, .chatlog-text, .chatlog-handle-tag, .inline-handle').forEach(el => {
       const darkColor = el.getAttribute('data-dark-color');
       const lightColor = el.getAttribute('data-light-color');
 
@@ -106,6 +107,23 @@ import {
       else el.appendChild(document.createTextNode(String(c)));
     }
     return el;
+  }
+
+  // Turn a line of prose into DOM nodes, rendering any inline
+  // [handle=ID]label[/handle] tags as colored, monospace spans. The common case
+  // (no tags) returns the bare string so callers still get a single text node.
+  function inlineNodes(text, roster) {
+    const segments = parseInlineHandles(text, roster);
+    if (segments.length === 1 && segments[0].type === 'text') return [segments[0].text];
+    return segments.map(seg => {
+      if (seg.type === 'text') return document.createTextNode(seg.text);
+      return h('span', {
+        class: 'inline-handle',
+        'data-dark-color': seg.colors.dark,
+        'data-light-color': seg.colors.light,
+        style: { color: colorForMode(seg.colors) }
+      }, seg.text);
+    });
   }
 
   function navigateTo(path, e) {
@@ -273,7 +291,8 @@ import {
 
     // Both chatlog and dialog blocks pull colors from the same roster file.
     const hasBlocks = /\[[A-Z]+ START\]/.test(text);
-    const roster = hasBlocks ? await fetchRoster() : {};
+    const hasHandles = /\[handle=/i.test(text);
+    const roster = (hasBlocks || hasHandles) ? await fetchRoster() : {};
 
     let lastIndex = 0;
     let match;
@@ -286,7 +305,7 @@ import {
         const beforeLines = beforeText.split('\n');
         for (const line of beforeLines) {
           if (line.trim()) {
-            frag.appendChild(h('p', {}, line));
+            frag.appendChild(h('p', {}, ...inlineNodes(line, roster)));
           }
         }
       }
@@ -389,7 +408,7 @@ import {
     if (lastIndex === 0) {
       const parts = text.split('\n');
       for (const line of parts) {
-        frag.appendChild(h('p', {}, line));
+        frag.appendChild(h('p', {}, ...inlineNodes(line, roster)));
       }
     } else {
       // Add remaining text after last chatlog
@@ -398,7 +417,7 @@ import {
         const afterLines = afterText.split('\n');
         for (const line of afterLines) {
           if (line.trim()) {
-            frag.appendChild(h('p', {}, line));
+            frag.appendChild(h('p', {}, ...inlineNodes(line, roster)));
           }
         }
       }

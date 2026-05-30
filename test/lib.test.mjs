@@ -11,6 +11,7 @@ import {
   buildRosterLookup,
   colorsFor,
   parseChatlog,
+  parseInlineHandles,
   formatDate,
   parseDate,
   parsePageNumber,
@@ -254,6 +255,41 @@ test('parseChatlog: unknown handle gets default colors', () => {
   const [line] = parseChatlog('XX: who am i', {});
   assert.equal(line.type, 'dialogue');
   assert.deepEqual(line.colors, DEFAULT_COLORS);
+});
+
+// ─── parseInlineHandles ─────────────────────────────────────────────────────
+
+test('parseInlineHandles: extracts a handle tag with surrounding text', () => {
+  const roster = { CV: { dark: '#00d5f0', light: '#007a8a' } };
+  const segs = parseInlineHandles('I am [handle=CV]cyanusViator[/handle] online', roster);
+  assert.deepEqual(segs, [
+    { type: 'text', text: 'I am ' },
+    { type: 'handle', id: 'CV', text: 'cyanusViator', colors: { dark: '#00d5f0', light: '#007a8a' } },
+    { type: 'text', text: ' online' },
+  ]);
+});
+
+test('parseInlineHandles: plain text comes back as one text segment', () => {
+  assert.deepEqual(parseInlineHandles('nothing to see here', {}),
+    [{ type: 'text', text: 'nothing to see here' }]);
+});
+
+test('parseInlineHandles: case-insensitive tag and id, unknown id gets default colors', () => {
+  const segs = parseInlineHandles('[HANDLE=xx]ghost[/HANDLE]', {});
+  assert.equal(segs.length, 1);
+  assert.equal(segs[0].type, 'handle');
+  assert.equal(segs[0].id, 'xx');
+  assert.equal(segs[0].text, 'ghost');
+  assert.deepEqual(segs[0].colors, DEFAULT_COLORS);
+});
+
+test('parseInlineHandles: handles multiple tags on one line', () => {
+  const roster = { CV: { dark: '#1', light: '#2' }, AF: { dark: '#3', light: '#4' } };
+  const segs = parseInlineHandles('[handle=CV]kai[/handle] and [handle=AF]scott[/handle]', roster);
+  assert.equal(segs.length, 3);
+  assert.equal(segs[0].text, 'kai');
+  assert.equal(segs[1].text, ' and ');
+  assert.equal(segs[2].text, 'scott');
 });
 
 // ─── formatDate ───────────────────────────────────────────────────────────

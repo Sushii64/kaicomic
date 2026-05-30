@@ -111,6 +111,27 @@ export function parseChatlog(chatlogText, roster) {
   return elements;
 }
 
+// Split a line of prose into inline segments, pulling out [handle=ID]label[/handle]
+// spans. ID is matched against the roster (case-insensitive, by name/abbr/handle)
+// for its color; label is the text shown, rendered colored + monospace. Returns a
+// flat list of { type: 'text', text } and { type: 'handle', id, text, colors }.
+// Lines without any handle tag come back as a single 'text' segment.
+const INLINE_HANDLE_RE = /\[handle=([^\]]+)\]([\s\S]*?)\[\/handle\]/gi;
+export function parseInlineHandles(text, roster = {}) {
+  const segments = [];
+  let last = 0;
+  let m;
+  INLINE_HANDLE_RE.lastIndex = 0;
+  while ((m = INLINE_HANDLE_RE.exec(text)) !== null) {
+    if (m.index > last) segments.push({ type: 'text', text: text.slice(last, m.index) });
+    const id = m[1].trim();
+    segments.push({ type: 'handle', id, text: m[2], colors: colorsFor(roster, id) });
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) segments.push({ type: 'text', text: text.slice(last) });
+  return segments;
+}
+
 // Reformat a stored MM-DD-YYYY date string into the user's chosen display format.
 export function formatDate(dateStr, format) {
   if (!dateStr) return '';

@@ -319,10 +319,11 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   font-weight: bold;
 }
 
-/* ── Inline [ABBR]text[/ABBR] tag ────────────────────────────────────────────
+/* ── Inline [handle=ID]label[/handle] tag ────────────────────────────────────
  *
- * Can appear anywhere in page content. JS resolves the abbr to roster colors
- * and sets inline style. This CSS just sets the font treatment.
+ * Can appear anywhere in page content. JS resolves ID against the roster to its
+ * colors and sets inline style via applyChatlogColors(). This CSS sets the font
+ * treatment (monospace) only.
  * ─────────────────────────────────────────────────────────────────────────── */
 
 .inline-handle {
