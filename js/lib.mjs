@@ -158,6 +158,41 @@ export function nextPageEntry(index, n) {
   return findPageEntry(index, n + 1);
 }
 
+// Normalize a path to forward slashes so local (possibly Windows) paths and
+// remote (always posix) paths can be compared and used as map keys.
+export function toPosixPath(p) {
+  return p.replace(/\\/g, '/');
+}
+
+// Decide which local files need uploading by comparing against a remote
+// snapshot. Both sides are keyed by *relative posix path* (never basename, so
+// files that share a name in different folders don't collide).
+//   localEntries:     [{ path, size }, ...]  (paths already posix-normalized)
+//   remoteSizeByPath: Map<relativePosixPath, size>
+// Returns { modifiedFiles, summary: { newCount, modifiedCount, unchangedCount } }.
+// Comparison is by size only: that's all FTP exposes cheaply, so a same-size
+// edit won't be detected here — the manifest-based path (which hashes) covers
+// that case once a manifest exists.
+export function computeModifiedFiles(localEntries, remoteSizeByPath) {
+  const modifiedFiles = [];
+  let newCount = 0, modifiedCount = 0, unchangedCount = 0;
+
+  for (const { path: relPath, size } of localEntries) {
+    const remoteSize = remoteSizeByPath.get(relPath);
+    if (remoteSize === undefined) {
+      modifiedFiles.push(relPath);
+      newCount++;
+    } else if (remoteSize !== size) {
+      modifiedFiles.push(relPath);
+      modifiedCount++;
+    } else {
+      unchangedCount++;
+    }
+  }
+
+  return { modifiedFiles, summary: { newCount, modifiedCount, unchangedCount } };
+}
+
 // Interpret an environment-variable-style truthy string.
 export function boolFromEnv(value, def = false) {
   if (value == null) return def;
