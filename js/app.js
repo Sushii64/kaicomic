@@ -771,8 +771,17 @@ import {
   }
 
   function route() {
-    const path = location.pathname.replace(/\/+$/, '');
+    let path = location.pathname.replace(/\/+$/, '');
     const hash = location.hash;
+
+    // Canonicalize the legacy bare /<number> (or #/<number>) URL to the clean
+    // /story/<number> form in place, so there's a single canonical URL per page.
+    // replaceState (not push) keeps the back button from bouncing between forms.
+    const legacyNumber = path.match(/^\/(\d+)$/) || hash.match(/^#\/(\d+)$/);
+    if (legacyNumber) {
+      path = `/story/${legacyNumber[1]}`;
+      history.replaceState({ path }, '', path);
+    }
 
     // Check for hash-based routes as fallback
     if (path === '/log' || hash === '#/log') {
