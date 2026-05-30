@@ -47,6 +47,10 @@ import {
     }
   }
 
+  function colorForMode(colors) {
+    return document.body.classList.contains('light-mode') ? colors.light : colors.dark;
+  }
+
   function applyChatlogColors() {
     const isLight = document.body.classList.contains('light-mode');
 
@@ -339,7 +343,8 @@ import {
             const handleSpan = h('span', {
               class: 'chatlog-handle-tag',
               'data-dark-color': colors.dark,
-              'data-light-color': colors.light
+              'data-light-color': colors.light,
+              style: { color: colorForMode(colors) }
             }, `[${handle}]`);
             headerLine.appendChild(handleSpan);
 
@@ -357,12 +362,14 @@ import {
             h('span', {
               class: 'chatlog-handle',
               'data-dark-color': elem.colors.dark,
-              'data-light-color': elem.colors.light
+              'data-light-color': elem.colors.light,
+              style: { color: colorForMode(elem.colors) }
             }, `${elem.handle}: `),
             h('span', {
               class: 'chatlog-text',
               'data-dark-color': elem.colors.dark,
-              'data-light-color': elem.colors.light
+              'data-light-color': elem.colors.light,
+              style: { color: colorForMode(elem.colors) }
             }, elem.text)
           );
           contentDiv.appendChild(line);
@@ -569,9 +576,6 @@ import {
       const contentHtml = await renderContentAsHtml(data.content);
       textWrap.append(contentHtml);
       panel.append(textWrap);
-
-      // Apply chatlog colors after rendering
-      setTimeout(() => applyChatlogColors(), 0);
 
       // Command link (big) placed right under the text. Use the pre-built
       // index to learn the next page's title and existence; only probe the
