@@ -1,0 +1,6 @@
+Lily: Draw Dr. Mint.
+30-05-2026
+------
+[DIALOG START]
+LILY: Heheheh
+[DIALOG END]
