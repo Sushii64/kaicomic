@@ -862,7 +862,10 @@ import {
   // Add keydown event listener for arrow navigation
   window.addEventListener('keydown', (event) => {
     const currentPage = getRequestedPageNumber();
-    if (!currentPage) return;
+    if (!currentPage) {
+      if (event.key === 'ArrowRight') navigateTo('/story/1');
+      return;
+    }
 
     if (event.key === 'ArrowRight') {
       // Probe the next page directly so newly-added pages are navigable without
@@ -870,8 +873,9 @@ import {
       fetchNextTitle(currentPage).then((title) => {
         if (title != null) navigateTo(`/story/${currentPage + 1}`);
       });
-    } else if (event.key === 'ArrowLeft' && currentPage > 1) {
-      navigateTo(`/story/${currentPage - 1}`);
+    } else if (event.key === 'ArrowLeft') {
+      if (currentPage > 1) navigateTo(`/story/${currentPage - 1}`);
+      else navigateTo('/');
     }
   });
 
