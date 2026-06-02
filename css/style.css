@@ -1,3 +1,12 @@
+/* ── Display-settings CSS variables ─────────────────────────────────────────
+ * Defaults match the hardcoded values they replace. JS overrides these on
+ * <html> when the user changes settings in the ⚙️ panel. */
+:root {
+  --reader-font-size: 18px;
+  --reader-line-spacing: 1.5;
+  --reader-img-size: 100%;
+}
+
 /* ── Reset & Base ──────────────────────────────────────────────────────────── */
 
 *,
@@ -191,7 +200,7 @@ a:visited       { color: #b69ae0; }
 
 .image img {
   display: block;
-  max-width: 100%;
+  max-width: var(--reader-img-size);
   height: auto;
   margin: 24px auto;
   image-rendering: auto;
@@ -205,7 +214,8 @@ a:visited       { color: #b69ae0; }
   max-width: 700px;
   text-align: center;
   font-family: "Courier New";
-  font-size: 18px;
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-spacing);
   font-weight: bold;
   color: #d0d0d0;
 }
@@ -319,6 +329,7 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   max-width: 700px;
   font-family: "Courier New";
   font-size: 16px;
+  line-height: var(--reader-line-spacing);
   text-align: left;
 }
 
@@ -446,6 +457,97 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 18px;
 }
+
+/* ── Settings gear & panel ──────────────────────────────────────────────────── */
+
+.settings-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.settings-gear {
+  font-style: normal;
+  text-decoration: none;
+  opacity: 0.85;
+}
+.settings-gear:hover { opacity: 1; }
+
+.settings-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  background: #1a1f2a;
+  border: 1px solid #4a4a6a;
+  padding: 14px 16px;
+  z-index: 200;
+  min-width: 240px;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+}
+
+.settings-panel__group {
+  margin-bottom: 12px;
+}
+.settings-panel__group:last-child { margin-bottom: 0; }
+
+.settings-panel__label {
+  display: block;
+  font-size: 12px;
+  color: #b3aad6;
+  margin-bottom: 6px;
+  font-family: "Courier New";
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.settings-stepper {
+  display: flex;
+  align-items: stretch;
+}
+
+.settings-stepper__btn {
+  width: 28px;
+  background: #0c0a18;
+  border: 1px solid #4a4a6a;
+  color: #d0d0d0;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.settings-stepper__btn:hover:not(:disabled) { background: #252a35; border-color: #7a70c0; color: #ece9ff; }
+.settings-stepper__btn:disabled             { opacity: 0.3; cursor: default; }
+
+.settings-stepper__val {
+  min-width: 54px;
+  text-align: center;
+  font-size: 13px;
+  font-family: "Courier New";
+  color: #ece9ff;
+  background: #181430;
+  border-top: 1px solid #4a4a6a;
+  border-bottom: 1px solid #4a4a6a;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Light-mode overrides */
+body.light-mode .settings-panel {
+  background: #f0edf8;
+  border-color: #b9b1d8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+body.light-mode .settings-panel__label                    { color: #574d78; }
+body.light-mode .settings-stepper__btn                    { background: #ffffff; border-color: #c9c2e0; color: #2a2a2a; }
+body.light-mode .settings-stepper__btn:hover:not(:disabled) { background: #e8e4f5; border-color: #6a5fc0; color: #2a2150; }
+body.light-mode .settings-stepper__val                    { background: #eceaf6; border-color: #c9c2e0; color: #2a2150; }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 

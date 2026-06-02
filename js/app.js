@@ -18,8 +18,17 @@ import {
   const STORAGE_KEYS = {
     DATE_FORMAT: 'nav-date-format',
     LIGHT_MODE: 'nav-light-mode',
-    SAVED_POSITION: 'nav-saved-position'
+    SAVED_POSITION: 'nav-saved-position',
+    FONT_SIZE: 'nav-font-size',
+    LINE_SPACING: 'nav-line-spacing',
+    IMAGE_SIZE: 'nav-image-size',
   };
+
+  const DISPLAY_SETTINGS = [
+    { key: STORAGE_KEYS.FONT_SIZE,    label: 'Font Size',    cssVar: '--reader-font-size',    default: 18,  min: 12,  max: 28,  step: 1,   decimals: 0, format: v => `${v}px`,  toCss: v => `${v}px`  },
+    { key: STORAGE_KEYS.LINE_SPACING, label: 'Line Spacing', cssVar: '--reader-line-spacing', default: 1.5, min: 1.0, max: 2.5, step: 0.1, decimals: 1, format: v => v.toFixed(1), toCss: v => v.toFixed(1) },
+    { key: STORAGE_KEYS.IMAGE_SIZE,   label: 'Image Size',   cssVar: '--reader-img-size',     default: 100, min: 30,  max: 200, step: 10,  decimals: 0, format: v => `${v}%`,   toCss: v => `${v}%`   },
+  ];
 
   function getFromStorage(key, defaultValue) {
     try {
@@ -35,6 +44,14 @@ import {
       localStorage.setItem(key, value);
     } catch {
       // Ignore storage errors
+    }
+  }
+
+  function applyDisplaySettings() {
+    for (const s of DISPLAY_SETTINGS) {
+      const stored = parseFloat(getFromStorage(s.key, null));
+      const val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
+      document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
     }
   }
 
@@ -609,7 +626,39 @@ import {
       }
 
       // Position controls on the right (or left if page 1)
-      const positionControls = h('p', { class: 'position-controls', style: { margin: '0', textAlign: n > 1 ? 'right' : 'left' } },
+      const positionControls = h('p', { class: 'position-controls', style: { margin: '0', textAlign: n > 1 ? 'right' : 'left' } });
+
+      // Gear / display-settings button
+      let activeSettingsPanel = null;
+      const settingsWrap = h('span', { class: 'settings-wrap' });
+      const gearBtn = h('a', {
+        href: '#',
+        title: 'Display settings',
+        class: 'settings-gear',
+        onClick: (e) => {
+          e.preventDefault();
+          if (activeSettingsPanel) {
+            activeSettingsPanel.remove();
+            activeSettingsPanel = null;
+          } else {
+            activeSettingsPanel = buildSettingsPanel();
+            settingsWrap.appendChild(activeSettingsPanel);
+            const closeOnOutside = (ev) => {
+              if (!document.contains(settingsWrap) || !settingsWrap.contains(ev.target)) {
+                activeSettingsPanel?.remove();
+                activeSettingsPanel = null;
+                document.removeEventListener('click', closeOnOutside);
+              }
+            };
+            setTimeout(() => document.addEventListener('click', closeOnOutside), 0);
+          }
+        }
+      }, '⚙️');
+      settingsWrap.appendChild(gearBtn);
+
+      positionControls.append(
+        settingsWrap,
+        ' | ',
         h('a', {
           href: '#',
           onClick: (e) => {
@@ -802,6 +851,8 @@ import {
     }
   }
 
+  applyDisplaySettings();
+
   window.addEventListener('popstate', route);
   window.addEventListener('hashchange', route);
   window.addEventListener('DOMContentLoaded', route);
@@ -821,6 +872,38 @@ import {
       navigateTo(`/story/${currentPage - 1}`);
     }
   });
+
+  function buildSettingsPanel() {
+    return h('div', { class: 'settings-panel' },
+      ...DISPLAY_SETTINGS.map(s => {
+        const stored = parseFloat(getFromStorage(s.key, null));
+        let val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
+
+        const display = h('span', { class: 'settings-stepper__val' }, s.format(val));
+        const minusBtn = h('button', { class: 'settings-stepper__btn' }, '−');
+        const plusBtn  = h('button', { class: 'settings-stepper__btn' }, '+');
+
+        const update = (newVal) => {
+          val = parseFloat(Math.min(s.max, Math.max(s.min, newVal)).toFixed(s.decimals));
+          display.textContent = s.format(val);
+          setToStorage(s.key, String(val));
+          document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
+          minusBtn.disabled = val <= s.min;
+          plusBtn.disabled  = val >= s.max;
+        };
+
+        minusBtn.addEventListener('click', () => update(val - s.step));
+        plusBtn.addEventListener('click',  () => update(val + s.step));
+        minusBtn.disabled = val <= s.min;
+        plusBtn.disabled  = val >= s.max;
+
+        return h('div', { class: 'settings-panel__group' },
+          h('span', { class: 'settings-panel__label' }, s.label),
+          h('div', { class: 'settings-stepper' }, minusBtn, display, plusBtn)
+        );
+      })
+    );
+  }
 
   // Show a transient tooltip above an element (used by the Save Position link
   // to confirm the save).
