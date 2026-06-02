@@ -202,21 +202,13 @@ import {
       }, 'Map')
     );
 
-    const lightModeLink = h('a', {
-      href: '#',
-      onClick: (e) => {
-        e.preventDefault();
-        toggleLightMode(lightModeLink);
-      }
-    }, document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode');
-
     const discordLink = h('a', {
       href: 'https://discord.gg/pp3NrFrZKh',
       target: '_blank',
       rel: 'noopener'
     }, 'Discord');
 
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, navSep(), discordLink);
+    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, discordLink);
 
     const main = h('main', { class: 'container' });
     const panel = h('article', { class: panelClass });
@@ -922,7 +914,18 @@ import {
       onClick: () => stepperUpdaters.forEach(fn => fn()),
     }, 'Reset');
 
-    return h('div', { class: 'settings-panel' }, ...groups, resetBtn);
+    const modeLabel = () => document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode';
+    const modeBtn = h('button', {
+      class: 'settings-mode-btn',
+      onClick: () => {
+        toggleLightMode(null);
+        modeBtn.textContent = modeLabel();
+      }
+    }, modeLabel());
+
+    return h('div', { class: 'settings-panel' }, ...groups,
+      h('div', { class: 'settings-bottom-btns' }, modeBtn, resetBtn)
+    );
   }
 
   // Show a transient tooltip above an element (used by the Save Position link
