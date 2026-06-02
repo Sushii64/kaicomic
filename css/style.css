@@ -478,16 +478,15 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   bottom: calc(100% + 8px);
   background: #1a1f2a;
   border: 1px solid #4a4a6a;
-  padding: 14px 16px;
+  padding: 12px 14px;
   z-index: 200;
-  min-width: 240px;
-  text-align: left;
+  width: max-content;
+  text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
-  white-space: nowrap;
 }
 
 .settings-panel__group {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .settings-panel__group:last-child { margin-bottom: 0; }
 
@@ -495,14 +494,14 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   display: block;
   font-size: 12px;
   color: #b3aad6;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   font-family: "Courier New";
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .settings-stepper {
-  display: flex;
+  display: inline-flex;
   align-items: stretch;
 }
 
@@ -538,16 +537,32 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   justify-content: center;
 }
 
+.settings-reset-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 16px;
+  background: none;
+  border: 1px solid #4a4a6a;
+  color: #b3aad6;
+  font-size: 12px;
+  font-family: "Courier New";
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.settings-reset-btn:hover { background: #252a35; border-color: #7a70c0; color: #ece9ff; }
+
 /* Light-mode overrides */
 body.light-mode .settings-panel {
-  background: #f0edf8;
-  border-color: #b9b1d8;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  background: #e8e4f5;
+  border-color: #7a70c0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
-body.light-mode .settings-panel__label                    { color: #574d78; }
-body.light-mode .settings-stepper__btn                    { background: #ffffff; border-color: #c9c2e0; color: #2a2a2a; }
-body.light-mode .settings-stepper__btn:hover:not(:disabled) { background: #e8e4f5; border-color: #6a5fc0; color: #2a2150; }
-body.light-mode .settings-stepper__val                    { background: #eceaf6; border-color: #c9c2e0; color: #2a2150; }
+body.light-mode .settings-panel__label                      { color: #2a2150; }
+body.light-mode .settings-stepper__btn                      { background: #ffffff; border-color: #7a70c0; color: #1a1040; }
+body.light-mode .settings-stepper__btn:hover:not(:disabled) { background: #d8d2f0; border-color: #4338ca; color: #1a1040; }
+body.light-mode .settings-stepper__val                      { background: #f5f3ff; border-color: #7a70c0; color: #1a1040; }
+body.light-mode .settings-reset-btn                         { border-color: #7a70c0; color: #2a2150; }
+body.light-mode .settings-reset-btn:hover                   { background: #d8d2f0; border-color: #4338ca; color: #1a1040; }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 

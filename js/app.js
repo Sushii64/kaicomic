@@ -641,10 +641,18 @@ import {
             activeSettingsPanel.remove();
             activeSettingsPanel = null;
           } else {
+            const rect = gearBtn.getBoundingClientRect();
             activeSettingsPanel = buildSettingsPanel();
-            settingsWrap.appendChild(activeSettingsPanel);
+            Object.assign(activeSettingsPanel.style, {
+              position: 'fixed',
+              right:  `${document.documentElement.clientWidth - rect.right}px`,
+              bottom: `${window.innerHeight - rect.top + 8}px`,
+              top:    'auto',
+              transform: 'none',
+            });
+            document.body.appendChild(activeSettingsPanel);
             const closeOnOutside = (ev) => {
-              if (!document.contains(settingsWrap) || !settingsWrap.contains(ev.target)) {
+              if (!gearBtn.contains(ev.target) && !activeSettingsPanel?.contains(ev.target)) {
                 activeSettingsPanel?.remove();
                 activeSettingsPanel = null;
                 document.removeEventListener('click', closeOnOutside);
@@ -874,35 +882,44 @@ import {
   });
 
   function buildSettingsPanel() {
-    return h('div', { class: 'settings-panel' },
-      ...DISPLAY_SETTINGS.map(s => {
-        const stored = parseFloat(getFromStorage(s.key, null));
-        let val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
+    const stepperUpdaters = [];
 
-        const display = h('span', { class: 'settings-stepper__val' }, s.format(val));
-        const minusBtn = h('button', { class: 'settings-stepper__btn' }, '−');
-        const plusBtn  = h('button', { class: 'settings-stepper__btn' }, '+');
+    const groups = DISPLAY_SETTINGS.map(s => {
+      const stored = parseFloat(getFromStorage(s.key, null));
+      let val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
 
-        const update = (newVal) => {
-          val = parseFloat(Math.min(s.max, Math.max(s.min, newVal)).toFixed(s.decimals));
-          display.textContent = s.format(val);
-          setToStorage(s.key, String(val));
-          document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
-          minusBtn.disabled = val <= s.min;
-          plusBtn.disabled  = val >= s.max;
-        };
+      const display  = h('span', { class: 'settings-stepper__val' }, s.format(val));
+      const minusBtn = h('button', { class: 'settings-stepper__btn' }, '−');
+      const plusBtn  = h('button', { class: 'settings-stepper__btn' }, '+');
 
-        minusBtn.addEventListener('click', () => update(val - s.step));
-        plusBtn.addEventListener('click',  () => update(val + s.step));
+      const update = (newVal) => {
+        val = parseFloat(Math.min(s.max, Math.max(s.min, newVal)).toFixed(s.decimals));
+        display.textContent = s.format(val);
+        setToStorage(s.key, String(val));
+        document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
         minusBtn.disabled = val <= s.min;
         plusBtn.disabled  = val >= s.max;
+      };
 
-        return h('div', { class: 'settings-panel__group' },
-          h('span', { class: 'settings-panel__label' }, s.label),
-          h('div', { class: 'settings-stepper' }, minusBtn, display, plusBtn)
-        );
-      })
-    );
+      minusBtn.addEventListener('click', () => update(val - s.step));
+      plusBtn.addEventListener('click',  () => update(val + s.step));
+      minusBtn.disabled = val <= s.min;
+      plusBtn.disabled  = val >= s.max;
+
+      stepperUpdaters.push(() => update(s.default));
+
+      return h('div', { class: 'settings-panel__group' },
+        h('span', { class: 'settings-panel__label' }, s.label),
+        h('div', { class: 'settings-stepper' }, minusBtn, display, plusBtn)
+      );
+    });
+
+    const resetBtn = h('button', {
+      class: 'settings-reset-btn',
+      onClick: () => stepperUpdaters.forEach(fn => fn()),
+    }, 'Reset');
+
+    return h('div', { class: 'settings-panel' }, ...groups, resetBtn);
   }
 
   // Show a transient tooltip above an element (used by the Save Position link
