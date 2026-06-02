@@ -426,7 +426,6 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
 .image .media-frame {
   position: relative;
   display: block;
-  max-width: 100%;
   margin: 24px auto;
   border: 1px solid #2a2f3a;
 }
