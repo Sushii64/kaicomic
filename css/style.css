@@ -110,8 +110,8 @@ a:visited       { color: #b69ae0; }
 /* Inline image separator between nav links (MSPA "candy corn" stand-in). */
 .nav-sep {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   margin: 0 14px;
   vertical-align: middle;
 }

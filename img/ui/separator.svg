@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
-  <!-- PLACEHOLDER nav separator (the "candy corn" equivalent). Swap for the real
-       comic-specific icon. Sized to sit inline with ~18px nav text. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22 22">
+  <!-- PLACEHOLDER nav separator (the "candy corn" equivalent). -->
   <defs>
     <clipPath id="diamond">
       <path d="M11 1.5 L20.5 11 L11 20.5 L1.5 11 Z"/>
@@ -8,9 +7,7 @@
   </defs>
   <path d="M11 1.5 L20.5 11 L11 20.5 L1.5 11 Z"
         fill="#6a5fc0" stroke="#a99cf0" stroke-width="1.5" stroke-linejoin="round"/>
-  <!-- pink speckle, clipped to the diamond — symmetric ring near the outer edge -->
   <g clip-path="url(#diamond)" fill="#ff8fcf">
-    <!-- near the four corners -->
     <circle cx="11" cy="4"  r="0.9"/>
     <circle cx="18" cy="11" r="0.9"/>
     <circle cx="11" cy="18" r="0.9"/>
