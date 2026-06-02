@@ -199,16 +199,16 @@ import {
       h('a', {
         href: '/map',
         onClick: (e) => { if (!navigateTo('/map', e)) e.preventDefault(); }
-      }, 'Map')
+      }, 'Map'),
+      navSep(),
+      h('a', {
+        href: 'https://discord.gg/pp3NrFrZKh',
+        target: '_blank',
+        rel: 'noopener'
+      }, 'Discord')
     );
 
-    const discordLink = h('a', {
-      href: 'https://discord.gg/pp3NrFrZKh',
-      target: '_blank',
-      rel: 'noopener'
-    }, 'Discord');
-
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, discordLink);
+    const lightModeToggle = h('div', { class: 'light-mode-toggle container' });
 
     const main = h('main', { class: 'container' });
     const panel = h('article', { class: panelClass });
