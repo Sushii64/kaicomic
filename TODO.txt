@@ -1,3 +1,2 @@
-- improve page styling
 - add map
 - maybe add dynamically generated opengraph embeds or something
