@@ -432,8 +432,7 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
 }
 
 .image .media-frame.media-frame--swf {
-  width: 652px;
-  max-width: 100%;
+  width: var(--reader-img-size);
   aspect-ratio: 652 / 452;
   background: #000;
 }
