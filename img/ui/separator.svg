@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22 22">
+  <!-- PLACEHOLDER nav separator (the "candy corn" equivalent). -->
+  <defs>
+    <clipPath id="diamond">
+      <path d="M11 1.5 L20.5 11 L11 20.5 L1.5 11 Z"/>
+    </clipPath>
+  </defs>
+  <path d="M11 1.5 L20.5 11 L11 20.5 L1.5 11 Z"
+        fill="#6a5fc0" stroke="#a99cf0" stroke-width="1.5" stroke-linejoin="round"/>
+  <g clip-path="url(#diamond)" fill="#ff8fcf">
+    <circle cx="11" cy="4"  r="0.9"/>
+    <circle cx="18" cy="11" r="0.9"/>
+    <circle cx="11" cy="18" r="0.9"/>
+    <circle cx="4"  cy="11" r="0.9"/>
+    <!-- near the four edge midpoints -->
+    <circle cx="15" cy="7"  r="0.9"/>
+    <circle cx="15" cy="15" r="0.9"/>
+    <circle cx="7"  cy="15" r="0.9"/>
+    <circle cx="7"  cy="7"  r="0.9"/>
+  </g>
+  <circle cx="11" cy="11" r="3" fill="#0c0a18"/>
+</svg>

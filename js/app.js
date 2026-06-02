@@ -18,8 +18,18 @@ import {
   const STORAGE_KEYS = {
     DATE_FORMAT: 'nav-date-format',
     LIGHT_MODE: 'nav-light-mode',
-    SAVED_POSITION: 'nav-saved-position'
+    SAVED_POSITION: 'nav-saved-position',
+    FONT_SIZE: 'nav-font-size',
+    LINE_SPACING: 'nav-line-spacing',
+    IMAGE_SIZE: 'nav-image-size',
   };
+
+  const DISPLAY_SETTINGS = [
+    { key: STORAGE_KEYS.FONT_SIZE,    label: 'Font Size',    cssVar: '--reader-font-size',    default: 18,  min: 12,  max: 28,  step: 1,   decimals: 0, format: v => `${v}px`,  toCss: v => `${v}px`  },
+    { key: STORAGE_KEYS.LINE_SPACING, label: 'Line Spacing', cssVar: '--reader-line-spacing', default: 1.5, min: 1.0, max: 2.5, step: 0.1, decimals: 1, format: v => v.toFixed(1), toCss: v => v.toFixed(1) },
+    { key: STORAGE_KEYS.IMAGE_SIZE,   label: 'Image Size',   cssVar: '--reader-img-size',     default: 100, min: 30,  max: 200, step: 10,  decimals: 0, format: v => `${v}%`,   toCss: v => v <= 100 ? `${v}%` : '100%',
+      extra: v => document.documentElement.style.setProperty('--reader-container-max', v > 100 ? `${Math.round(950 * v / 100)}px` : '950px') },
+  ];
 
   function getFromStorage(key, defaultValue) {
     try {
@@ -35,6 +45,15 @@ import {
       localStorage.setItem(key, value);
     } catch {
       // Ignore storage errors
+    }
+  }
+
+  function applyDisplaySettings() {
+    for (const s of DISPLAY_SETTINGS) {
+      const stored = parseFloat(getFromStorage(s.key, null));
+      const val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
+      document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
+      s.extra?.(val);
     }
   }
 
@@ -145,11 +164,25 @@ import {
   // main > article(panel) for the caller to fill. Returns the pieces so each
   // view can append content to `panel` and decide where to place `lightModeToggle`.
   // panelClass sets the <article> class (e.g. 'panel page', 'panel home').
+  // A small inline image used to separate nav links, in the spirit of the MS
+  // Paint Adventures "candy corn" separators. Placeholder art for now — swap
+  // /img/ui/separator.svg for the real comic-specific icon.
+  function navSep() {
+    return h('img', { class: 'nav-sep', src: '/img/ui/separator.svg', alt: '', 'aria-hidden': 'true' });
+  }
+
   function renderChrome(panelClass = 'panel') {
+    // MSPA-style masthead: two corner mascots flanking the centered title.
     const header = h('header', { class: 'site-header' },
-      h('div', { class: 'container' },
-        h('h1', { class: 'site-title' }, 'Null and Void')
-      )
+      h('div', { class: 'masthead container' },
+        h('img', { class: 'masthead__mascot masthead__mascot--left', src: '/img/ui/mascot-left.png', alt: '', 'aria-hidden': 'true' }),
+        h('div', { class: 'masthead__title-wrap' },
+          h('h1', { class: 'site-title' }, 'Null and Void'),
+          h('p', { class: 'site-tagline' }, 'a Legends of Willow webcomic')
+        ),
+        h('img', { class: 'masthead__mascot masthead__mascot--right', src: '/img/ui/mascot-right.png', alt: '', 'aria-hidden': 'true' })
+      ),
+      h('div', { class: 'masthead__rule' })
     );
 
     const underHeader = h('div', { class: 'under-header container' },
@@ -157,25 +190,17 @@ import {
         href: '/',
         onClick: (e) => { if (!navigateTo('/', e)) e.preventDefault(); }
       }, 'Home'),
-      ' | ',
+      navSep(),
       h('a', {
         href: '/log',
         onClick: (e) => { if (!navigateTo('/log', e)) e.preventDefault(); }
       }, 'Log'),
-      ' | ',
+      navSep(),
       h('a', {
         href: '/map',
         onClick: (e) => { if (!navigateTo('/map', e)) e.preventDefault(); }
       }, 'Map')
     );
-
-    const lightModeLink = h('a', {
-      href: '#',
-      onClick: (e) => {
-        e.preventDefault();
-        toggleLightMode(lightModeLink);
-      }
-    }, document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode');
 
     const discordLink = h('a', {
       href: 'https://discord.gg/pp3NrFrZKh',
@@ -183,7 +208,7 @@ import {
       rel: 'noopener'
     }, 'Discord');
 
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, ' | ', discordLink);
+    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, discordLink);
 
     const main = h('main', { class: 'container' });
     const panel = h('article', { class: panelClass });
@@ -595,7 +620,47 @@ import {
       }
 
       // Position controls on the right (or left if page 1)
-      const positionControls = h('p', { class: 'position-controls', style: { margin: '0', textAlign: n > 1 ? 'right' : 'left' } },
+      const positionControls = h('p', { class: 'position-controls', style: { margin: '0', textAlign: n > 1 ? 'right' : 'left' } });
+
+      // Gear / display-settings button
+      let activeSettingsPanel = null;
+      const settingsWrap = h('span', { class: 'settings-wrap' });
+      const gearBtn = h('a', {
+        href: '#',
+        title: 'Display settings',
+        class: 'settings-gear',
+        onClick: (e) => {
+          e.preventDefault();
+          if (activeSettingsPanel) {
+            activeSettingsPanel.remove();
+            activeSettingsPanel = null;
+          } else {
+            const rect = gearBtn.getBoundingClientRect();
+            activeSettingsPanel = buildSettingsPanel();
+            Object.assign(activeSettingsPanel.style, {
+              position: 'fixed',
+              right:  `${document.documentElement.clientWidth - rect.right}px`,
+              bottom: `${window.innerHeight - rect.top + 8}px`,
+              top:    'auto',
+              transform: 'none',
+            });
+            document.body.appendChild(activeSettingsPanel);
+            const closeOnOutside = (ev) => {
+              if (!gearBtn.contains(ev.target) && !activeSettingsPanel?.contains(ev.target)) {
+                activeSettingsPanel?.remove();
+                activeSettingsPanel = null;
+                document.removeEventListener('click', closeOnOutside);
+              }
+            };
+            setTimeout(() => document.addEventListener('click', closeOnOutside), 0);
+          }
+        }
+      }, '⚙️');
+      settingsWrap.appendChild(gearBtn);
+
+      positionControls.append(
+        settingsWrap,
+        ' | ',
         h('a', {
           href: '#',
           onClick: (e) => {
@@ -659,7 +724,7 @@ import {
     app.innerHTML = '';
     applyLightMode();
 
-    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel');
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel log');
     app.append(header, underHeader, main);
 
     panel.append(h('h2', { class: 'panel__title' }, 'Log'));
@@ -788,6 +853,8 @@ import {
     }
   }
 
+  applyDisplaySettings();
+
   window.addEventListener('popstate', route);
   window.addEventListener('hashchange', route);
   window.addEventListener('DOMContentLoaded', route);
@@ -807,6 +874,59 @@ import {
       navigateTo(`/story/${currentPage - 1}`);
     }
   });
+
+  function buildSettingsPanel() {
+    const stepperUpdaters = [];
+
+    const groups = DISPLAY_SETTINGS.map(s => {
+      const stored = parseFloat(getFromStorage(s.key, null));
+      let val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
+
+      const display  = h('span', { class: 'settings-stepper__val' }, s.format(val));
+      const minusBtn = h('button', { class: 'settings-stepper__btn' }, '−');
+      const plusBtn  = h('button', { class: 'settings-stepper__btn' }, '+');
+
+      const update = (newVal) => {
+        val = parseFloat(Math.min(s.max, Math.max(s.min, newVal)).toFixed(s.decimals));
+        display.textContent = s.format(val);
+        setToStorage(s.key, String(val));
+        document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
+        s.extra?.(val);
+        minusBtn.disabled = val <= s.min;
+        plusBtn.disabled  = val >= s.max;
+      };
+
+      minusBtn.addEventListener('click', () => update(val - s.step));
+      plusBtn.addEventListener('click',  () => update(val + s.step));
+      minusBtn.disabled = val <= s.min;
+      plusBtn.disabled  = val >= s.max;
+
+      stepperUpdaters.push(() => update(s.default));
+
+      return h('div', { class: 'settings-panel__group' },
+        h('span', { class: 'settings-panel__label' }, s.label),
+        h('div', { class: 'settings-stepper' }, minusBtn, display, plusBtn)
+      );
+    });
+
+    const resetBtn = h('button', {
+      class: 'settings-reset-btn',
+      onClick: () => stepperUpdaters.forEach(fn => fn()),
+    }, 'Reset');
+
+    const modeLabel = () => document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode';
+    const modeBtn = h('button', {
+      class: 'settings-mode-btn',
+      onClick: () => {
+        toggleLightMode(null);
+        modeBtn.textContent = modeLabel();
+      }
+    }, modeLabel());
+
+    return h('div', { class: 'settings-panel' }, ...groups,
+      h('div', { class: 'settings-bottom-btns' }, modeBtn, resetBtn)
+    );
+  }
 
   // Show a transient tooltip above an element (used by the Save Position link
   // to confirm the save).
