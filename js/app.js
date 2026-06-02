@@ -27,7 +27,8 @@ import {
   const DISPLAY_SETTINGS = [
     { key: STORAGE_KEYS.FONT_SIZE,    label: 'Font Size',    cssVar: '--reader-font-size',    default: 18,  min: 12,  max: 28,  step: 1,   decimals: 0, format: v => `${v}px`,  toCss: v => `${v}px`  },
     { key: STORAGE_KEYS.LINE_SPACING, label: 'Line Spacing', cssVar: '--reader-line-spacing', default: 1.5, min: 1.0, max: 2.5, step: 0.1, decimals: 1, format: v => v.toFixed(1), toCss: v => v.toFixed(1) },
-    { key: STORAGE_KEYS.IMAGE_SIZE,   label: 'Image Size',   cssVar: '--reader-img-size',     default: 100, min: 30,  max: 200, step: 10,  decimals: 0, format: v => `${v}%`,   toCss: v => `${v}%`   },
+    { key: STORAGE_KEYS.IMAGE_SIZE,   label: 'Image Size',   cssVar: '--reader-img-size',     default: 100, min: 30,  max: 200, step: 10,  decimals: 0, format: v => `${v}%`,   toCss: v => v <= 100 ? `${v}%` : '100%',
+      extra: v => document.documentElement.style.setProperty('--reader-container-max', v > 100 ? `${Math.round(950 * v / 100)}px` : '950px') },
   ];
 
   function getFromStorage(key, defaultValue) {
@@ -52,6 +53,7 @@ import {
       const stored = parseFloat(getFromStorage(s.key, null));
       const val = isNaN(stored) ? s.default : Math.min(s.max, Math.max(s.min, stored));
       document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
+      s.extra?.(val);
     }
   }
 
@@ -897,6 +899,7 @@ import {
         display.textContent = s.format(val);
         setToStorage(s.key, String(val));
         document.documentElement.style.setProperty(s.cssVar, s.toCss(val));
+        s.extra?.(val);
         minusBtn.disabled = val <= s.min;
         plusBtn.disabled  = val >= s.max;
       };
