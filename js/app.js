@@ -154,15 +154,14 @@ import {
 
   function renderChrome(panelClass = 'panel') {
     // MSPA-style masthead: two corner mascots flanking the centered title.
-    // The mascot art is a placeholder (/img/ui/mascot.png) for now.
     const header = h('header', { class: 'site-header' },
       h('div', { class: 'masthead container' },
-        h('img', { class: 'masthead__mascot masthead__mascot--left', src: '/img/ui/mascot.png', alt: '', 'aria-hidden': 'true' }),
+        h('img', { class: 'masthead__mascot masthead__mascot--left', src: '/img/ui/mascot-left.png', alt: '', 'aria-hidden': 'true' }),
         h('div', { class: 'masthead__title-wrap' },
           h('h1', { class: 'site-title' }, 'Null and Void'),
           h('p', { class: 'site-tagline' }, 'a Legends of Willow webcomic')
         ),
-        h('img', { class: 'masthead__mascot masthead__mascot--right', src: '/img/ui/mascot.png', alt: '', 'aria-hidden': 'true' })
+        h('img', { class: 'masthead__mascot masthead__mascot--right', src: '/img/ui/mascot-right.png', alt: '', 'aria-hidden': 'true' })
       ),
       h('div', { class: 'masthead__rule' })
     );

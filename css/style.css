@@ -63,7 +63,7 @@ a:visited       { color: #b69ae0; }
   font-weight: bold;
   text-align: center;
   color: #ece9ff;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   letter-spacing: 2px;
   text-shadow: 0 2px 0 #0c0a18, 0 0 14px rgba(122, 108, 200, 0.35);
 }
@@ -72,7 +72,7 @@ a:visited       { color: #b69ae0; }
   margin: 6px 0 0 0;
   font-size: 15px;
   color: #b3aad6;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   letter-spacing: 0.5px;
 }
 
@@ -173,7 +173,7 @@ a:visited       { color: #b69ae0; }
   font-weight: bold;
   color: #e8e8e8;
   text-align: center;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   letter-spacing: 0.5px;
 }
 
@@ -183,7 +183,7 @@ a:visited       { color: #b69ae0; }
   font-weight: normal;
   color: #d0d0d0;
   text-align: center;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   letter-spacing: 0.3px;
 }
 
@@ -204,8 +204,9 @@ a:visited       { color: #b69ae0; }
   margin: 24px auto;
   max-width: 700px;
   text-align: center;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-family: "Courier New";
   font-size: 18px;
+  font-weight: bold;
   color: #d0d0d0;
 }
 .content p {
@@ -222,7 +223,7 @@ a:visited       { color: #b69ae0; }
   line-height: 1.5;
   color: #e8e8e8;
   margin: 30px 0 18px 0;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   letter-spacing: 0.3px;
 }
 .command-link a       { color: #5b9bd5; text-decoration: underline; }
@@ -316,7 +317,7 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   padding: 16px;
   margin: 24px auto;
   max-width: 700px;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   font-size: 16px;
   text-align: left;
 }
@@ -330,7 +331,7 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   color: #e8e8e8;
   border: 1px solid #4a4a4a;
   padding: 6px 16px;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   font-size: 14px;
   cursor: pointer;
   font-weight: bold;
@@ -348,7 +349,7 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
   color: #e8e8e8;
   border: 1px solid #4a4a4a;
   padding: 6px 16px;
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   font-size: 14px;
   cursor: pointer;
   font-weight: bold;
@@ -404,7 +405,7 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
  * ─────────────────────────────────────────────────────────────────────────── */
 
 .inline-handle {
-  font-family: Courier, "Courier New", monospace;
+  font-family: "Courier New";
   font-weight: bold;
 }
 
