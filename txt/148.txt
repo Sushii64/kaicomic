@@ -1,0 +1,14 @@
+~~>
+01-06-2026
+------
+[DIALOG START]
+LILY: Hiiii
+JANE: Hi, Lily!
+LILY: Whatcha doin
+JANE: Finding someone who would be suitable for the test.
+LILY: Oh ?
+JANE: Yes.
+LILY: Any luck so far
+JANE: Uh...
+JANE: I’m eyeing this specific guy...
+[DIALOG END]

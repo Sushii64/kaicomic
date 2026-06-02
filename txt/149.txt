@@ -1,0 +1,13 @@
+~~>
+01-06-2026
+------
+[DIALOG START]
+JANE: I’ve been reading up on him. He seems like a good fit.
+LILY: Why so
+JANE: Adventurous, mostly.
+JANE: He’s also seemingly got a good moral code.
+JANE: Not sure though.
+JANE: I didn’t look too hard, but it shouldn’t matter all that much.
+LILY: Youre the boss
+JANE: Mhm.
+[DIALOG END]
