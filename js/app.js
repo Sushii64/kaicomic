@@ -145,11 +145,26 @@ import {
   // main > article(panel) for the caller to fill. Returns the pieces so each
   // view can append content to `panel` and decide where to place `lightModeToggle`.
   // panelClass sets the <article> class (e.g. 'panel page', 'panel home').
+  // A small inline image used to separate nav links, in the spirit of the MS
+  // Paint Adventures "candy corn" separators. Placeholder art for now — swap
+  // /img/ui/separator.svg for the real comic-specific icon.
+  function navSep() {
+    return h('img', { class: 'nav-sep', src: '/img/ui/separator.svg', alt: '', 'aria-hidden': 'true' });
+  }
+
   function renderChrome(panelClass = 'panel') {
+    // MSPA-style masthead: two corner mascots flanking the centered title.
+    // The mascot art is a placeholder (/img/ui/mascot.png) for now.
     const header = h('header', { class: 'site-header' },
-      h('div', { class: 'container' },
-        h('h1', { class: 'site-title' }, 'Null and Void')
-      )
+      h('div', { class: 'masthead container' },
+        h('img', { class: 'masthead__mascot masthead__mascot--left', src: '/img/ui/mascot.png', alt: '', 'aria-hidden': 'true' }),
+        h('div', { class: 'masthead__title-wrap' },
+          h('h1', { class: 'site-title' }, 'Null and Void'),
+          h('p', { class: 'site-tagline' }, 'a Legends of Willow webcomic')
+        ),
+        h('img', { class: 'masthead__mascot masthead__mascot--right', src: '/img/ui/mascot.png', alt: '', 'aria-hidden': 'true' })
+      ),
+      h('div', { class: 'masthead__rule' })
     );
 
     const underHeader = h('div', { class: 'under-header container' },
@@ -157,12 +172,12 @@ import {
         href: '/',
         onClick: (e) => { if (!navigateTo('/', e)) e.preventDefault(); }
       }, 'Home'),
-      ' | ',
+      navSep(),
       h('a', {
         href: '/log',
         onClick: (e) => { if (!navigateTo('/log', e)) e.preventDefault(); }
       }, 'Log'),
-      ' | ',
+      navSep(),
       h('a', {
         href: '/map',
         onClick: (e) => { if (!navigateTo('/map', e)) e.preventDefault(); }
@@ -183,7 +198,7 @@ import {
       rel: 'noopener'
     }, 'Discord');
 
-    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, ' | ', discordLink);
+    const lightModeToggle = h('div', { class: 'light-mode-toggle container' }, lightModeLink, navSep(), discordLink);
 
     const main = h('main', { class: 'container' });
     const panel = h('article', { class: panelClass });
@@ -659,7 +674,7 @@ import {
     app.innerHTML = '';
     applyLightMode();
 
-    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel');
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel log');
     app.append(header, underHeader, main);
 
     panel.append(h('h2', { class: 'panel__title' }, 'Log'));

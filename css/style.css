@@ -8,7 +8,7 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  background: #0a0e17;
+  background: #0c0a18;
   color: #d0d0d0;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 18px;
@@ -21,41 +21,99 @@ body.transitioning * {
 
 /* ── Links ─────────────────────────────────────────────────────────────────── */
 
-a               { color: #5b9bd5; text-decoration: underline; }
-a:hover         { color: #7ab8e8; }
-a:visited       { color: #a68dd5; }
+a               { color: #7c9fe8; text-decoration: underline; }
+a:hover         { color: #9bb6f0; }
+a:visited       { color: #b69ae0; }
 
-/* ── Header ────────────────────────────────────────────────────────────────── */
+/* ── Header / masthead ───────────────────────────────────────────────────────
+ *
+ * Modeled on the MS Paint Adventures masthead: a banner panel with two corner
+ * mascots flanking the centered title, capped by a thin accent rule. The
+ * mascot art (/img/ui/mascot.svg) is a placeholder for now.
+ * ─────────────────────────────────────────────────────────────────────────── */
 
-.site-header {
-  background: #12161f;
-  border-bottom: 1px solid #2a2f3a;
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  min-height: 96px;
+  background: linear-gradient(180deg, #211b3d 0%, #1a1531 100%);
 }
-.site-header .container {
-  padding-top: 14px;
-  padding-bottom: 14px;
+
+.masthead__mascot {
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  display: block;
+  image-rendering: auto;
 }
+
+.masthead__title-wrap {
+  flex: 1 1 auto;
+  text-align: center;
+  min-width: 0;
+}
+
 .site-title {
   margin: 0;
-  font-size: 28px;
+  font-size: 40px;
   font-weight: bold;
   text-align: center;
-  color: #e8e8e8;
+  color: #ece9ff;
+  font-family: Courier, "Courier New", monospace;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 0 #0c0a18, 0 0 14px rgba(122, 108, 200, 0.35);
+}
+
+.site-tagline {
+  margin: 6px 0 0 0;
+  font-size: 15px;
+  color: #b3aad6;
   font-family: Courier, "Courier New", monospace;
   letter-spacing: 0.5px;
+}
+
+/* The thin light strip under the MSPA banner (their #c6c6c6 rule), recolored.
+ * Matched to the masthead/nav width so all three colored bars align. */
+.masthead__rule {
+  height: 6px;
+  max-width: 950px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, #3a3168 0%, #6a5fc0 50%, #3a3168 100%);
 }
 
 /* ── Under-header nav ──────────────────────────────────────────────────────── */
 
 .under-header.container {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
   text-align: center;
-  border-bottom: 1px solid #2a2f3a;
+  background: #15112b;
+  border-bottom: 1px solid #3a3168;
 }
 .under-header a {
-  color: #5b9bd5;
-  font-size: 18px;
+  color: #7c9fe8;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1;
+  vertical-align: middle;
+  text-transform: uppercase;
+  text-decoration-thickness: 0.5px;
+}
+
+/* Inline image separator between nav links (MSPA "candy corn" stand-in). */
+.nav-sep {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 0 14px;
+  vertical-align: middle;
 }
 
 /* ── Light-mode toggle ─────────────────────────────────────────────────────── */
@@ -75,16 +133,35 @@ a:visited       { color: #a68dd5; }
 /* ── Layout ────────────────────────────────────────────────────────────────── */
 
 .container {
+  --pad: 24px;
   width: 100%;
   max-width: 950px;
   margin: 0 auto;
-  padding: 24px;
+  padding: var(--pad);
 }
 
 .panel {
-  background: #0a0e17;
+  background: #0c0a18;
   border: none;
   padding: 24px 18px;
+}
+
+/* ── Boxed page (story + log) ─────────────────────────────────────────────────
+ * Frames the page content, echoing the MS Paint Adventures comic box: a lighter
+ * inner panel inside a darker outer frame band, with a thin accent edge line.
+ * The 7px border is the frame band; the inset shadow is the inner edge.
+ *
+ * The negative horizontal margin (= the content container's padding) makes the
+ * box's border-box span the full container width, so it lines up exactly with
+ * the masthead and nav bars above. --pad is inherited from the parent
+ * .container, so the alignment holds at the responsive padding too. */
+.panel.page,
+.panel.log {
+  background: #181430;
+  border: 7px solid #211b3d;
+  box-shadow: inset 0 0 0 1px #4a3f86;
+  margin: 7px calc(-1 * var(--pad));
+  padding: 28px;
 }
 
 /* ── Panel titles ──────────────────────────────────────────────────────────── */
@@ -118,7 +195,7 @@ a:visited       { color: #a68dd5; }
   height: auto;
   margin: 24px auto;
   image-rendering: auto;
-  border: 1px solid #2a2f3a;
+  border: 1px solid #3a3168;
 }
 
 /* ── Text content ──────────────────────────────────────────────────────────── */
@@ -371,14 +448,24 @@ select option             { background: #1a1f2a; color: #e8e8e8; }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 
+@media (max-width: 720px) {
+  .masthead          { gap: 10px; min-height: 0; }
+  .masthead__mascot  { width: 64px; height: 64px; }
+  .site-title        { font-size: 30px; letter-spacing: 1px; }
+}
+
 @media (max-width: 520px) {
   body            { font-size: 16px; }
-  .container      { padding: 18px; }
+  .container      { --pad: 18px; }
   .panel          { padding: 18px 12px; }
   .panel__title   { font-size: 24px; }
   .panel__subtitle{ font-size: 20px; }
   .command-link   { font-size: 18px; }
   .content        { font-size: 16px; }
+  .masthead__mascot { width: 48px; height: 48px; }
+  .site-title       { font-size: 24px; }
+  .site-tagline     { font-size: 13px; }
+  .nav-sep          { margin: 0 8px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -392,17 +479,22 @@ body.light-mode {
 }
 
 /* Header */
-body.light-mode .site-header              { background: #e8e8e8; border-bottom-color: #c0c0c0; }
-body.light-mode .site-title               { color: #1a1a1a; }
-body.light-mode .under-header.container   { border-bottom-color: #c0c0c0; }
+body.light-mode .masthead                 { background: linear-gradient(180deg, #e9e6f5 0%, #ddd7ef 100%); }
+body.light-mode .site-title               { color: #2a2150; text-shadow: 0 1px 0 #ffffff; }
+body.light-mode .site-tagline             { color: #574d78; }
+body.light-mode .masthead__rule           { background: linear-gradient(90deg, #b9b1d8 0%, #6a5fc0 50%, #b9b1d8 100%); }
+body.light-mode .under-header.container   { background: #ece9f6; border-bottom-color: #b9b1d8; }
+body.light-mode .under-header a           { color: #4338ca; }
 
 /* Links */
-body.light-mode a         { color: #2563eb; }
-body.light-mode a:hover   { color: #1d4ed8; }
+body.light-mode a         { color: #4338ca; }
+body.light-mode a:hover   { color: #3730a3; }
 body.light-mode a:visited { color: #7c3aed; }
 
 /* Panel */
 body.light-mode .panel          { background: #f5f5f5; }
+body.light-mode .panel.page,
+body.light-mode .panel.log      { background: #ffffff; border-color: #ddd7ef; box-shadow: inset 0 0 0 1px #c9c2e0; }
 body.light-mode .panel__title,
 body.light-mode .panel__title.title { color: #1a1a1a; }
 body.light-mode .panel__subtitle{ color: #2a2a2a; }
