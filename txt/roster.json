@@ -35,6 +35,18 @@
     "dark": "#E0C6FF",
     "light": "#8a5fc7"
   },
+  "vacuoMachinator": {
+    "handle": "vacuoMachinator",
+    "abbr": "VM",
+    "dark": "#6761AF",
+    "light": "#6761AF"
+  },
+  "laetusExactoris": {
+    "handle": "laetusExactoris",
+    "abbr": "LE",
+    "dark": "#c8ff00",
+    "light": "#6e8c00"
+  },
   "Tau": {
     "dark": "#fffce3",
     "light": "#ccc697"
