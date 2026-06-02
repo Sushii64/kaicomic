@@ -38,8 +38,7 @@ a:visited       { color: #b69ae0; }
 /* ── Header / masthead ───────────────────────────────────────────────────────
  *
  * Modeled on the MS Paint Adventures masthead: a banner panel with two corner
- * mascots flanking the centered title, capped by a thin accent rule. The
- * mascot art (/img/ui/mascot.svg) is a placeholder for now.
+ * mascots flanking the centered title, capped by a thin accent rule.
  * ─────────────────────────────────────────────────────────────────────────── */
 
 .masthead {
@@ -47,16 +46,16 @@ a:visited       { color: #b69ae0; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   min-height: 96px;
   background: linear-gradient(180deg, #211b3d 0%, #1a1531 100%);
 }
 
 .masthead__mascot {
   flex: 0 0 auto;
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
   display: block;
   image-rendering: auto;
 }
