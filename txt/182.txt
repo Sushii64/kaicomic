@@ -12,6 +12,7 @@ CHATTERBOX: princepsIgnis [PI] (Status: Offline)
 
 [CHATLOG START]
 -- studiumTenebris [ST] commenced chatting with princepsIgnis [PI] --
+
 ST: Hello
 ST: Do you exist
 [CHATLOG END]
