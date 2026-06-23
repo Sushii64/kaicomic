@@ -64,7 +64,8 @@ test('escapeHtml: escapes the five HTML-significant characters', () => {
 
 test('injectStoryMeta: fills in og:/twitter: title, description, url, image', () => {
   const html = injectStoryMeta(OG_TEMPLATE, { num: 65, title: 'Leave Kai alone and be AM.' }, { hasImage: true });
-  assert.match(html, /<meta property="og:title" content="Leave Kai alone and be AM\.">/);
+  assert.match(html, /<meta property="og:title" content="&gt;Leave Kai alone and be AM\.">/);
+  assert.match(html, /<meta name="twitter:title" content="&gt;Leave Kai alone and be AM\.">/);
   assert.match(html, /<meta property="og:description" content="Null and Void - A Legends of Willow webcomic">/);
   assert.match(html, new RegExp(`<meta property="og:url" content="${SITE_URL}/story/65">`));
   assert.match(html, new RegExp(`<meta property="og:image" content="${SITE_URL}/img/65\\.png">`));
@@ -90,7 +91,7 @@ test('injectStoryMeta: respects a siteUrl override and strips its trailing slash
 
 test('injectStoryMeta: escapes special characters in the title', () => {
   const html = injectStoryMeta(OG_TEMPLATE, { num: 1, title: 'Tom & "Jerry" <3' }, { hasImage: true });
-  assert.match(html, /<meta property="og:title" content="Tom &amp; &quot;Jerry&quot; &lt;3">/);
+  assert.match(html, /<meta property="og:title" content="&gt;Tom &amp; &quot;Jerry&quot; &lt;3">/);
 });
 
 test('injectStoryMeta: throws if the Open Graph marker is missing', () => {

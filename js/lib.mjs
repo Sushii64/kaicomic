@@ -57,7 +57,7 @@ export function escapeHtml(str) {
 export function injectStoryMeta(templateHtml, page, opts = {}) {
   const siteUrl = (opts.siteUrl || SITE_URL).replace(/\/+$/, '');
   const num = page.num;
-  const title = escapeHtml((page.title || '').trim() || SITE_TITLE);
+  const title = escapeHtml('>' + ((page.title || '').trim() || SITE_TITLE));
   const desc = escapeHtml(storyOgDescription());
   const pageUrl = escapeHtml(`${siteUrl}/story/${num}`);
   const imageUrl = escapeHtml(`${siteUrl}/img/${num}.png`);
