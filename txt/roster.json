@@ -47,6 +47,12 @@
     "dark": "#c8ff00",
     "light": "#6e8c00"
   },
+  "princepsIgnis": {
+    "handle": "princepsIgnis",
+    "abbr": "PI",
+    "dark": "#fa8072",
+    "light": "#a55147"
+  },
   "Tau": {
     "dark": "#fffce3",
     "light": "#ccc697"

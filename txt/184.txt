@@ -1,0 +1,11 @@
+Lily: Search for "Null".
+23-06-2026
+[noimage]
+------
+[DATABASELOG START]
+> Search: Null
+
+0 results found.
+[DATABASELOG END]
+
+You are not getting anywhere with this line of thinking.

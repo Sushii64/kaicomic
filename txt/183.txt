@@ -1,0 +1,11 @@
+Lily: Search for "Void".
+23-06-2026
+[noimage]
+------
+[DATABASELOG START]
+> Search: Void
+
+0 results found.
+[DATABASELOG END]
+
+Unfortunate.

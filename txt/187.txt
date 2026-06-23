@@ -1,0 +1,11 @@
+Lily: Search for "Cody".
+23-06-2026
+[noimage]
+------
+[DATABASELOG START]
+> Search: Cody
+
+Too many results to display on one page. Perhaps try narrowing your search?
+[DATABASELOG END]
+
+You're not sure why you tried that.

@@ -1,0 +1,11 @@
+Lily: Search for "Jane".
+23-06-2026
+[noimage]
+------
+[DATABASELOG START]
+> Search: Jane
+
+0 results found.
+[DATABASELOG END]
+
+Huh, interesting.

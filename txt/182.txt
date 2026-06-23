@@ -1,0 +1,19 @@
+Lily: Read Contact.
+23-06-2026
+[noimage]
+------
+You suppose it wouldn't hurt to try.
+
+[DATABASELOG START]
+> Contact
+
+CHATTERBOX: princepsIgnis [PI] (Status: Offline)
+[DATABASELOG END]
+
+[CHATLOG START]
+-- studiumTenebris [ST] commenced chatting with princepsIgnis [PI] --
+ST: Hello
+ST: Do you exist
+[CHATLOG END]
+
+You'll leave that open if he decides to reply.
