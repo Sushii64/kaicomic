@@ -105,9 +105,9 @@ async function generatePageIndex(txtDir, outPath) {
     if (!(await pathExists(filePath))) break;
     try {
       const raw = await fsp.readFile(filePath, 'utf8');
-      const { title, date } = parseTxtMeta(raw);
-      entries.push({ num: n, title, date });
-      console.log(`  ${n}: "${title}"${date ? ` (${date})` : ''}`);
+      const { title, date, noImage } = parseTxtMeta(raw);
+      entries.push({ num: n, title, date, noImage });
+      console.log(`  ${n}: "${title}"${date ? ` (${date})` : ''}${noImage ? ' [noimage]' : ''}`);
     } catch (err) {
       console.warn(`  Warning: could not read ${filePath}: ${err.message}`);
     }
@@ -141,7 +141,10 @@ async function generateStoryPages(distDir, entries, siteUrl) {
   const template = await fsp.readFile(path.join(distDir, 'index.html'), 'utf8');
   let written = 0;
   for (const entry of entries) {
-    const hasImage = await pathExists(path.join(distDir, 'img', `${entry.num}.png`));
+    // A page flagged [noimage] is intentionally image-less, so keep its embed a
+    // plain "summary" card even if a leftover img/<n>.png happens to exist.
+    const hasImage = !entry.noImage
+      && await pathExists(path.join(distDir, 'img', `${entry.num}.png`));
     const html = injectStoryMeta(template, entry, { siteUrl, hasImage });
     const outDir = path.join(distDir, 'story', String(entry.num));
     await ensureDir(outDir);

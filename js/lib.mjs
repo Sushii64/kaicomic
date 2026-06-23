@@ -97,9 +97,36 @@ export function injectStoryMeta(templateHtml, page, opts = {}) {
 // Default colors used when a speaker isn't found in the roster.
 export const DEFAULT_COLORS = { dark: '#d0d0d0', light: '#2a2a2a' };
 
-// Parse a comic page .txt file into { title, date, content }.
+// A page may opt out of having an image by putting [noimage] on its own line
+// in the metadata region (between the title and the ------ separator). This
+// makes an intentionally image-less, text-adventure-style page instead of
+// relying on a missing image file.
+const NOIMAGE_RE = /^\[noimage\]$/i;
+const DATE_RE = /^\d{1,2}-\d{1,2}-\d{4}$/;
+
+// Walk the metadata lines after the title (up to the ------ separator, or the
+// first line of real content when there's no separator), pulling out an
+// optional MM-DD-YYYY date and the [noimage] flag in any order. Returns
+// { date, noImage, contentStart } where contentStart is the index of the first
+// non-metadata line (only meaningful when there's no separator).
+function parseMetaLines(lines, sepIndex) {
+  const limit = sepIndex >= 0 ? sepIndex : lines.length;
+  let date = null;
+  let noImage = false;
+  let i = 1;
+  for (; i < limit; i++) {
+    const l = lines[i].trim();
+    if (!date && DATE_RE.test(l)) { date = l; continue; }
+    if (NOIMAGE_RE.test(l)) { noImage = true; continue; }
+    break;
+  }
+  return { date, noImage, contentStart: i };
+}
+
+// Parse a comic page .txt file into { title, date, content, noImage }.
 //   Line 1:            title
-//   Line 2 (optional): date as MM-DD-YYYY, before the ------ separator
+//   Line 2 (optional): date as MM-DD-YYYY and/or [noimage], before the
+//   [noimage] (optional): declare the page has no image (in any meta order)
 //   ------             separator
 //   ...                content
 export function parseTxtFile(text) {
@@ -107,35 +134,22 @@ export function parseTxtFile(text) {
   const lines = norm.split('\n');
   const sepIndex = lines.findIndex(l => l.trim() === '------');
   const title = (lines[0] || '').trim();
-
-  // Check if second line is a date (MM-DD-YYYY format)
-  let date = null;
-  let contentStartLine = 1;
-  if (sepIndex > 1) {
-    const secondLine = lines[1].trim();
-    if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(secondLine)) {
-      date = secondLine;
-      contentStartLine = 2;
-    }
-  }
+  const { date, noImage, contentStart } = parseMetaLines(lines, sepIndex);
 
   const content = sepIndex >= 0
     ? lines.slice(sepIndex + 1).join('\n').trim()
-    : lines.slice(contentStartLine).join('\n').trim();
-  return { title, date, content };
+    : lines.slice(contentStart).join('\n').trim();
+  return { title, date, content, noImage };
 }
 
 // Lighter-weight metadata parse used by the deploy-time index generator:
-// returns just { title, date } and does not require the ------ separator.
+// returns just { title, date, noImage } and does not require the ------ separator.
 export function parseTxtMeta(raw) {
   const lines = raw.replace(/\r\n/g, '\n').split('\n');
+  const sepIndex = lines.findIndex(l => l.trim() === '------');
   const title = (lines[0] || '').trim();
-  let date = null;
-  if (lines.length > 1) {
-    const second = lines[1].trim();
-    if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(second)) date = second;
-  }
-  return { title, date };
+  const { date, noImage } = parseMetaLines(lines, sepIndex);
+  return { title, date, noImage };
 }
 
 // Build a color lookup keyed by every identifier a speaker might be referenced

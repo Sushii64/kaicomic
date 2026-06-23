@@ -223,6 +223,7 @@ test('parseTxtFile: title, date, and content from a standard page', () => {
     title: 'Null and Void',
     date: '11-10-2025',
     content: 'Alone in his room.\nA new day.',
+    noImage: false,
   });
 });
 
@@ -232,7 +233,37 @@ test('parseTxtFile: no date line leaves date null and keeps content after separa
     title: 'Some Title',
     date: null,
     content: 'Body line',
+    noImage: false,
   });
+});
+
+test('parseTxtFile: [noimage] flag sets noImage and is not part of content', () => {
+  const txt = 'A Dark Room\n06-23-2026\n[noimage]\n------\nYou see only darkness.';
+  assert.deepEqual(parseTxtFile(txt), {
+    title: 'A Dark Room',
+    date: '06-23-2026',
+    content: 'You see only darkness.',
+    noImage: true,
+  });
+});
+
+test('parseTxtFile: [noimage] works without a date and is case-insensitive', () => {
+  const { date, noImage, content } = parseTxtFile('Title\n[NoImage]\n------\nbody');
+  assert.equal(date, null);
+  assert.equal(noImage, true);
+  assert.equal(content, 'body');
+});
+
+test('parseTxtFile: [noimage] before the date line also works (any meta order)', () => {
+  const { date, noImage } = parseTxtFile('Title\n[noimage]\n06-23-2026\n------\nbody');
+  assert.equal(date, '06-23-2026');
+  assert.equal(noImage, true);
+});
+
+test('parseTxtFile: a bracketed token in the body is not treated as the flag', () => {
+  const { noImage, content } = parseTxtFile('Title\n------\n[noimage] is just text here');
+  assert.equal(noImage, false);
+  assert.equal(content, '[noimage] is just text here');
 });
 
 test('parseTxtFile: normalizes CRLF line endings', () => {
@@ -261,11 +292,15 @@ test('parseTxtFile: a line-2 string that is not a date is treated as content, no
 
 test('parseTxtMeta: returns just title and date', () => {
   const txt = 'My Title\n12-25-2025\n------\nbody we ignore';
-  assert.deepEqual(parseTxtMeta(txt), { title: 'My Title', date: '12-25-2025' });
+  assert.deepEqual(parseTxtMeta(txt), { title: 'My Title', date: '12-25-2025', noImage: false });
 });
 
 test('parseTxtMeta: date null when line 2 is not a date', () => {
-  assert.deepEqual(parseTxtMeta('Title\n------\nbody'), { title: 'Title', date: null });
+  assert.deepEqual(parseTxtMeta('Title\n------\nbody'), { title: 'Title', date: null, noImage: false });
+});
+
+test('parseTxtMeta: reports the [noimage] flag', () => {
+  assert.deepEqual(parseTxtMeta('Title\n[noimage]\n------\nbody'), { title: 'Title', date: null, noImage: true });
 });
 
 // ─── buildRosterLookup ───────────────────────────────────────────────────────
