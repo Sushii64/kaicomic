@@ -32,7 +32,7 @@ import { promises as fsp } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { Client as FtpClient } from 'basic-ftp';
 import webpack from 'webpack';
-import { boolFromEnv, parseTxtMeta, toPosixPath, computeModifiedFiles } from './js/lib.mjs';
+import { boolFromEnv, parseTxtMeta, toPosixPath, computeModifiedFiles, injectStoryMeta, SITE_URL } from './js/lib.mjs';
 
 const MANIFEST_FILE = '.deploy-manifest.json';
 const BATCH_SIZE = 10;
@@ -116,12 +116,39 @@ async function generatePageIndex(txtDir, outPath) {
 
   if (entries.length === 0) {
     console.warn('  No numbered txt files found — index.json not written.');
-    return;
+    return entries;
   }
 
   await ensureDir(path.dirname(outPath));
   await fsp.writeFile(outPath, JSON.stringify(entries, null, 2), 'utf8');
   console.log(`  Wrote ${entries.length} entries to ${outPath}`);
+  return entries;
+}
+
+// ─── Per-page Open Graph HTML ───────────────────────────────────────────────────
+//
+// For each story page, write dist/story/<num>/index.html: a copy of the built
+// index.html with that page's Open Graph / Twitter tags injected (see
+// injectStoryMeta in js/lib.mjs). This makes link unfurlers that don't run JS
+// (Discord, Slack, etc.) show the page's real title and image when someone
+// shares https://<site>/story/<num>. Apache serves the directory's index.html
+// via DirectoryIndex, and the SPA still boots normally for real browsers.
+
+async function generateStoryPages(distDir, entries, siteUrl) {
+  if (!entries || entries.length === 0) return;
+  console.log('Generating per-page Open Graph HTML (dist/story/<n>/index.html)...');
+
+  const template = await fsp.readFile(path.join(distDir, 'index.html'), 'utf8');
+  let written = 0;
+  for (const entry of entries) {
+    const hasImage = await pathExists(path.join(distDir, 'img', `${entry.num}.png`));
+    const html = injectStoryMeta(template, entry, { siteUrl, hasImage });
+    const outDir = path.join(distDir, 'story', String(entry.num));
+    await ensureDir(outDir);
+    await fsp.writeFile(path.join(outDir, 'index.html'), html, 'utf8');
+    written++;
+  }
+  console.log(`  Wrote ${written} story page(s) under ${path.join(distDir, 'story')}/`);
 }
 
 // ─── Build ────────────────────────────────────────────────────────────────────
@@ -150,8 +177,9 @@ async function buildSite() {
   // Generate index.json from local txt/ before copying
   const localTxtDir = path.resolve('txt');
   const indexJsonOut = path.join(localTxtDir, 'index.json');
+  let pageEntries = [];
   if (await pathExists(localTxtDir)) {
-    await generatePageIndex(localTxtDir, indexJsonOut);
+    pageEntries = await generatePageIndex(localTxtDir, indexJsonOut) || [];
   } else {
     console.warn('txt/ directory not found — skipping index.json generation.');
   }
@@ -181,6 +209,10 @@ async function buildSite() {
       console.log(`  + ${d}/ -> ${path.join(dist, d)}/`);
     }
   }
+
+  // Per-page Open Graph HTML. Runs after index.html and img/ are in dist so the
+  // generator can use them as the template / probe for page images.
+  await generateStoryPages(dist, pageEntries, process.env.SITE_URL || SITE_URL);
 }
 
 // ─── Obfuscation ──────────────────────────────────────────────────────────────

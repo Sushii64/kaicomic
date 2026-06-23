@@ -11,3 +11,4 @@ package-lock.json
 .env.*
 !.env.example
 .deploy-manifest.json
+*.kate-swp

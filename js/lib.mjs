@@ -6,6 +6,16 @@
 
 export const SITE_TITLE = 'Null and Void';
 
+// Tagline used in og:/twitter: descriptions. The site root keeps the bare
+// tagline (see index.html); story pages prefix the site name so a shared link
+// reads "Null and Void - A Legends of Willow webcomic" under the page title.
+export const SITE_TAGLINE = 'A Legends of Willow webcomic';
+
+// Canonical public origin (no trailing slash). Used to build absolute og:url /
+// og:image URLs, which crawlers like Discord require. deploy.js may override
+// this from the SITE_URL env var.
+export const SITE_URL = 'https://null.pixspla.net';
+
 // Build the document.title for a story page: "<page title> - <site>", falling
 // back to the bare site name when the page has no title (or its title already
 // is the site name, to avoid "Null and Void - Null and Void").
@@ -13,6 +23,75 @@ export function formatPageTitle(pageTitle) {
   const trimmed = (pageTitle || '').trim();
   if (!trimmed || trimmed === SITE_TITLE) return SITE_TITLE;
   return `${trimmed} - ${SITE_TITLE}`;
+}
+
+// The og:/twitter: description for a story page: "Null and Void - A Legends of
+// Willow webcomic".
+export function storyOgDescription() {
+  return `${SITE_TITLE} - ${SITE_TAGLINE}`;
+}
+
+// Escape a string for safe interpolation into an HTML attribute value.
+export function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Produce a per-page copy of the base index.html with Open Graph / Twitter
+// meta tags filled in for one story page, so link unfurlers (Discord, etc.)
+// that don't run JS still see the page's real title and image. The returned
+// HTML still boots the SPA normally for real browsers.
+//
+//   templateHtml  contents of the built index.html
+//   page          { num, title } for the story page
+//   opts.siteUrl  public origin override (defaults to SITE_URL)
+//   opts.hasImage whether /img/<num>.png exists; gates the image tags
+//
+// Replaces everything from the "<!-- Open Graph -->" marker up to the
+// stylesheet <link>, plus the <title>. Throws if the marker is absent so a
+// template change can't silently produce pages with stale/default tags.
+export function injectStoryMeta(templateHtml, page, opts = {}) {
+  const siteUrl = (opts.siteUrl || SITE_URL).replace(/\/+$/, '');
+  const num = page.num;
+  const title = escapeHtml((page.title || '').trim() || SITE_TITLE);
+  const desc = escapeHtml(storyOgDescription());
+  const pageUrl = escapeHtml(`${siteUrl}/story/${num}`);
+  const imageUrl = escapeHtml(`${siteUrl}/img/${num}.png`);
+
+  const imageTags = opts.hasImage
+    ? `  <meta property="og:image" content="${imageUrl}">\n`
+    : '';
+  const twitterImage = opts.hasImage
+    ? `  <meta name="twitter:image" content="${imageUrl}">\n`
+    : '';
+  const twitterCard = opts.hasImage ? 'summary_large_image' : 'summary';
+
+  const block =
+    `<!-- Open Graph -->\n` +
+    `  <meta property="og:title" content="${title}">\n` +
+    `  <meta property="og:description" content="${desc}">\n` +
+    `  <meta property="og:type" content="article">\n` +
+    `  <meta property="og:url" content="${pageUrl}">\n` +
+    imageTags +
+    `\n` +
+    `  <!-- Twitter Card -->\n` +
+    `  <meta name="twitter:card" content="${twitterCard}">\n` +
+    `  <meta name="twitter:title" content="${title}">\n` +
+    `  <meta name="twitter:description" content="${desc}">\n` +
+    twitterImage +
+    `\n  `;
+
+  const re = /<!-- Open Graph -->[\s\S]*?(?=<link rel="stylesheet")/;
+  if (!re.test(templateHtml)) {
+    throw new Error('injectStoryMeta: could not find the Open Graph meta block in the template');
+  }
+  let html = templateHtml.replace(re, block);
+  html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(formatPageTitle(page.title))}</title>`);
+  return html;
 }
 
 // Default colors used when a speaker isn't found in the roster.

@@ -23,7 +23,80 @@ import {
   nextPageEntry,
   toPosixPath,
   computeModifiedFiles,
+  escapeHtml,
+  storyOgDescription,
+  injectStoryMeta,
+  SITE_URL,
 } from '../js/lib.mjs';
+
+// ─── injectStoryMeta / Open Graph ────────────────────────────────────────────
+
+const OG_TEMPLATE = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Null and Void</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Null and Void">
+  <meta property="og:description" content="A Legends of Willow webcomic">
+  <meta property="og:type" content="website">
+<!--  <meta property="og:image" content="/og-image.png">-->
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Null and Void">
+  <meta name="twitter:description" content="A Legends of Willow webcomic">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body></body>
+</html>`;
+
+test('storyOgDescription: site name prefixes the tagline', () => {
+  assert.equal(storyOgDescription(), 'Null and Void - A Legends of Willow webcomic');
+});
+
+test('escapeHtml: escapes the five HTML-significant characters', () => {
+  assert.equal(escapeHtml(`<a href="x" id='y'>&</a>`),
+    '&lt;a href=&quot;x&quot; id=&#39;y&#39;&gt;&amp;&lt;/a&gt;');
+});
+
+test('injectStoryMeta: fills in og:/twitter: title, description, url, image', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 65, title: 'Leave Kai alone and be AM.' }, { hasImage: true });
+  assert.match(html, /<meta property="og:title" content="Leave Kai alone and be AM\.">/);
+  assert.match(html, /<meta property="og:description" content="Null and Void - A Legends of Willow webcomic">/);
+  assert.match(html, new RegExp(`<meta property="og:url" content="${SITE_URL}/story/65">`));
+  assert.match(html, new RegExp(`<meta property="og:image" content="${SITE_URL}/img/65\\.png">`));
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(html, new RegExp(`<meta name="twitter:image" content="${SITE_URL}/img/65\\.png">`));
+  // <title> is rewritten to the page title.
+  assert.match(html, /<title>Leave Kai alone and be AM\. - Null and Void<\/title>/);
+  // The stylesheet link (our replacement boundary) survives.
+  assert.match(html, /<link rel="stylesheet" href="\/css\/style\.css">/);
+});
+
+test('injectStoryMeta: omits image tags and downgrades the card when no image exists', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 7, title: 'X' }, { hasImage: false });
+  assert.doesNotMatch(html, /og:image/);
+  assert.doesNotMatch(html, /twitter:image/);
+  assert.match(html, /<meta name="twitter:card" content="summary">/);
+});
+
+test('injectStoryMeta: respects a siteUrl override and strips its trailing slash', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 3, title: 'X' }, { hasImage: true, siteUrl: 'https://example.test/' });
+  assert.match(html, /<meta property="og:url" content="https:\/\/example\.test\/story\/3">/);
+});
+
+test('injectStoryMeta: escapes special characters in the title', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 1, title: 'Tom & "Jerry" <3' }, { hasImage: true });
+  assert.match(html, /<meta property="og:title" content="Tom &amp; &quot;Jerry&quot; &lt;3">/);
+});
+
+test('injectStoryMeta: throws if the Open Graph marker is missing', () => {
+  assert.throws(() => injectStoryMeta('<html><head></head></html>', { num: 1, title: 'X' }, {}),
+    /could not find the Open Graph meta block/);
+});
 
 // ─── formatPageTitle ─────────────────────────────────────────────────────────
 
