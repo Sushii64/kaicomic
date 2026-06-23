@@ -571,10 +571,15 @@ import {
       panel.append(h('h2', { class: 'panel__title title' }, titleText));
       document.title = formatPageTitle(titleText);
 
-      // Image (PNG/GIF) or SWF (Ruffle)
-      const imgWrap = h('div', { class: 'image' });
-      imgWrap.appendChild(await mediaElementFor(n));
-      panel.append(imgWrap);
+      // Image (PNG/GIF) or SWF (Ruffle). A page flagged [noimage] is an
+      // intentionally image-less, text-adventure-style page: skip the media
+      // area entirely (and the probing fetches) rather than showing a
+      // placeholder.
+      if (!data.noImage) {
+        const imgWrap = h('div', { class: 'image' });
+        imgWrap.appendChild(await mediaElementFor(n));
+        panel.append(imgWrap);
+      }
 
       // Text content
       const textWrap = h('div', { class: 'content' });

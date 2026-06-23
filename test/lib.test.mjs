@@ -23,7 +23,81 @@ import {
   nextPageEntry,
   toPosixPath,
   computeModifiedFiles,
+  escapeHtml,
+  storyOgDescription,
+  injectStoryMeta,
+  SITE_URL,
 } from '../js/lib.mjs';
+
+// ─── injectStoryMeta / Open Graph ────────────────────────────────────────────
+
+const OG_TEMPLATE = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Null and Void</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Null and Void">
+  <meta property="og:description" content="A Legends of Willow webcomic">
+  <meta property="og:type" content="website">
+<!--  <meta property="og:image" content="/og-image.png">-->
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Null and Void">
+  <meta name="twitter:description" content="A Legends of Willow webcomic">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body></body>
+</html>`;
+
+test('storyOgDescription: site name prefixes the tagline', () => {
+  assert.equal(storyOgDescription(), 'Null and Void - A Legends of Willow webcomic');
+});
+
+test('escapeHtml: escapes the five HTML-significant characters', () => {
+  assert.equal(escapeHtml(`<a href="x" id='y'>&</a>`),
+    '&lt;a href=&quot;x&quot; id=&#39;y&#39;&gt;&amp;&lt;/a&gt;');
+});
+
+test('injectStoryMeta: fills in og:/twitter: title, description, url, image', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 65, title: 'Leave Kai alone and be AM.' }, { hasImage: true });
+  assert.match(html, /<meta property="og:title" content="&gt;Leave Kai alone and be AM\.">/);
+  assert.match(html, /<meta name="twitter:title" content="&gt;Leave Kai alone and be AM\.">/);
+  assert.match(html, /<meta property="og:description" content="Null and Void - A Legends of Willow webcomic">/);
+  assert.match(html, new RegExp(`<meta property="og:url" content="${SITE_URL}/story/65">`));
+  assert.match(html, new RegExp(`<meta property="og:image" content="${SITE_URL}/img/65\\.png">`));
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(html, new RegExp(`<meta name="twitter:image" content="${SITE_URL}/img/65\\.png">`));
+  // <title> is rewritten to the page title.
+  assert.match(html, /<title>Leave Kai alone and be AM\. - Null and Void<\/title>/);
+  // The stylesheet link (our replacement boundary) survives.
+  assert.match(html, /<link rel="stylesheet" href="\/css\/style\.css">/);
+});
+
+test('injectStoryMeta: omits image tags and downgrades the card when no image exists', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 7, title: 'X' }, { hasImage: false });
+  assert.doesNotMatch(html, /og:image/);
+  assert.doesNotMatch(html, /twitter:image/);
+  assert.match(html, /<meta name="twitter:card" content="summary">/);
+});
+
+test('injectStoryMeta: respects a siteUrl override and strips its trailing slash', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 3, title: 'X' }, { hasImage: true, siteUrl: 'https://example.test/' });
+  assert.match(html, /<meta property="og:url" content="https:\/\/example\.test\/story\/3">/);
+});
+
+test('injectStoryMeta: escapes special characters in the title', () => {
+  const html = injectStoryMeta(OG_TEMPLATE, { num: 1, title: 'Tom & "Jerry" <3' }, { hasImage: true });
+  assert.match(html, /<meta property="og:title" content="&gt;Tom &amp; &quot;Jerry&quot; &lt;3">/);
+});
+
+test('injectStoryMeta: throws if the Open Graph marker is missing', () => {
+  assert.throws(() => injectStoryMeta('<html><head></head></html>', { num: 1, title: 'X' }, {}),
+    /could not find the Open Graph meta block/);
+});
 
 // ─── formatPageTitle ─────────────────────────────────────────────────────────
 
@@ -149,6 +223,7 @@ test('parseTxtFile: title, date, and content from a standard page', () => {
     title: 'Null and Void',
     date: '11-10-2025',
     content: 'Alone in his room.\nA new day.',
+    noImage: false,
   });
 });
 
@@ -158,7 +233,37 @@ test('parseTxtFile: no date line leaves date null and keeps content after separa
     title: 'Some Title',
     date: null,
     content: 'Body line',
+    noImage: false,
   });
+});
+
+test('parseTxtFile: [noimage] flag sets noImage and is not part of content', () => {
+  const txt = 'A Dark Room\n06-23-2026\n[noimage]\n------\nYou see only darkness.';
+  assert.deepEqual(parseTxtFile(txt), {
+    title: 'A Dark Room',
+    date: '06-23-2026',
+    content: 'You see only darkness.',
+    noImage: true,
+  });
+});
+
+test('parseTxtFile: [noimage] works without a date and is case-insensitive', () => {
+  const { date, noImage, content } = parseTxtFile('Title\n[NoImage]\n------\nbody');
+  assert.equal(date, null);
+  assert.equal(noImage, true);
+  assert.equal(content, 'body');
+});
+
+test('parseTxtFile: [noimage] before the date line also works (any meta order)', () => {
+  const { date, noImage } = parseTxtFile('Title\n[noimage]\n06-23-2026\n------\nbody');
+  assert.equal(date, '06-23-2026');
+  assert.equal(noImage, true);
+});
+
+test('parseTxtFile: a bracketed token in the body is not treated as the flag', () => {
+  const { noImage, content } = parseTxtFile('Title\n------\n[noimage] is just text here');
+  assert.equal(noImage, false);
+  assert.equal(content, '[noimage] is just text here');
 });
 
 test('parseTxtFile: normalizes CRLF line endings', () => {
@@ -187,11 +292,15 @@ test('parseTxtFile: a line-2 string that is not a date is treated as content, no
 
 test('parseTxtMeta: returns just title and date', () => {
   const txt = 'My Title\n12-25-2025\n------\nbody we ignore';
-  assert.deepEqual(parseTxtMeta(txt), { title: 'My Title', date: '12-25-2025' });
+  assert.deepEqual(parseTxtMeta(txt), { title: 'My Title', date: '12-25-2025', noImage: false });
 });
 
 test('parseTxtMeta: date null when line 2 is not a date', () => {
-  assert.deepEqual(parseTxtMeta('Title\n------\nbody'), { title: 'Title', date: null });
+  assert.deepEqual(parseTxtMeta('Title\n------\nbody'), { title: 'Title', date: null, noImage: false });
+});
+
+test('parseTxtMeta: reports the [noimage] flag', () => {
+  assert.deepEqual(parseTxtMeta('Title\n[noimage]\n------\nbody'), { title: 'Title', date: null, noImage: true });
 });
 
 // ─── buildRosterLookup ───────────────────────────────────────────────────────

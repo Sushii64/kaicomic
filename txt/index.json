@@ -2,901 +2,1081 @@
   {
     "num": 1,
     "title": "Null and Void",
-    "date": "11-10-2025"
+    "date": "11-10-2025",
+    "noImage": false
   },
   {
     "num": 2,
     "title": "Choose name.",
-    "date": "11-10-2025"
+    "date": "11-10-2025",
+    "noImage": false
   },
   {
     "num": 3,
     "title": "Remember who you are.",
-    "date": "11-10-2025"
+    "date": "11-10-2025",
+    "noImage": false
   },
   {
     "num": 4,
     "title": "Kai: Examine picture frame on the wall.",
-    "date": "11-10-2025"
+    "date": "11-10-2025",
+    "noImage": false
   },
   {
     "num": 5,
     "title": "Kai: Take a look at your scarf.",
-    "date": "13-10-2025"
+    "date": "13-10-2025",
+    "noImage": false
   },
   {
     "num": 6,
     "title": "Kai: Look outside.",
-    "date": "13-10-2025"
+    "date": "13-10-2025",
+    "noImage": false
   },
   {
     "num": 7,
     "title": "Kai: Prepare to leave.",
-    "date": "13-10-2025"
+    "date": "13-10-2025",
+    "noImage": false
   },
   {
     "num": 8,
     "title": "Kai: Make use of modern communication technology.",
-    "date": "27-10-2025"
+    "date": "27-10-2025",
+    "noImage": false
   },
   {
     "num": 9,
     "title": "~~>",
-    "date": "27-10-2025"
+    "date": "27-10-2025",
+    "noImage": false
   },
   {
     "num": 10,
     "title": "Kai: Get off and go downstairs.",
-    "date": "27-10-2025"
+    "date": "27-10-2025",
+    "noImage": false
   },
   {
     "num": 11,
     "title": "Kai: Do a sick backflip down the stairs.",
-    "date": "27-10-2025"
+    "date": "27-10-2025",
+    "noImage": false
   },
   {
     "num": 12,
     "title": "~~>",
-    "date": "27-10-2025"
+    "date": "27-10-2025",
+    "noImage": false
   },
   {
     "num": 13,
     "title": "Kai: Squeal like a hog and vomit on the stairs.",
-    "date": "06-11-2025"
+    "date": "06-11-2025",
+    "noImage": false
   },
   {
     "num": 14,
     "title": "Kai: Find your phone.",
-    "date": "06-11-2025"
+    "date": "06-11-2025",
+    "noImage": false
   },
   {
     "num": 15,
     "title": "Kai: Find your phone!!",
-    "date": "06-11-2025"
+    "date": "06-11-2025",
+    "noImage": false
   },
   {
     "num": 16,
     "title": "Kai: Check wall socket.",
-    "date": "06-11-2025"
+    "date": "06-11-2025",
+    "noImage": false
   },
   {
     "num": 17,
     "title": "Kai: Catastract phone.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 18,
     "title": "Kai: Remember how that stupid thing works.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 19,
     "title": "Kai: Go to kitchen.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 20,
     "title": "Kai: Grab knives.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 21,
     "title": "Kai: Assign daggers to strife specibus.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 22,
     "title": "Kai: Check the fridge.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 23,
     "title": "Kai: Catastract some food for the road.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 24,
     "title": "Kai: Go outside.",
-    "date": "26-11-2025"
+    "date": "26-11-2025",
+    "noImage": false
   },
   {
     "num": 25,
     "title": "[S] Kai: SCRAP!",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 26,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 27,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 28,
     "title": "Kai: Answer.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 29,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 30,
     "title": "Kai: Get a move on.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 31,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 32,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 33,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 34,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 35,
     "title": "Be the other guy.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 36,
     "title": "Other guy: Wake up.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 37,
     "title": "Be the other other guy.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 38,
     "title": "Other other guy: Choose name.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 39,
     "title": "Other other guy: Remember who you are.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 40,
     "title": "Scott: Get up.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 41,
     "title": "Scott: Get up!!",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 42,
     "title": "Give up and be the other guy.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 43,
     "title": "No, no. The OTHER guy!",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 44,
     "title": "IAJDF:KLJADFKLJADLGKJKLJFKL:JADFKLH",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 45,
     "title": "Fine, be the yellow one.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 46,
     "title": "Kindhearted girl: Remember who you are.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 47,
     "title": "Katie: Message Kai.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 48,
     "title": "Kai: Message that other person.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 49,
     "title": "Kai: Return to conversation with Katie.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 50,
     "title": "~~>",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 51,
     "title": "Katie: Hoot like an owl and cry on the floor.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 52,
     "title": "Katie: Tell me your secrets.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 53,
     "title": "Katie: Go outside.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 54,
     "title": "Katie: Get in your car.",
-    "date": "10-12-2025"
+    "date": "10-12-2025",
+    "noImage": false
   },
   {
     "num": 55,
     "title": "Be Kai.",
-    "date": "24-12-2025"
+    "date": "24-12-2025",
+    "noImage": false
   },
   {
     "num": 56,
     "title": "Kai: Tell them to leave.",
-    "date": "24-12-2025"
+    "date": "24-12-2025",
+    "noImage": false
   },
   {
     "num": 57,
     "title": "Kai: SCRAP!",
-    "date": "24-12-2025"
+    "date": "24-12-2025",
+    "noImage": false
   },
   {
     "num": 58,
     "title": "Scott: Go wake up the other guy as a prank.",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 59,
     "title": "Be Scott.",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 60,
     "title": "Kai: Collect the Goober Gold.",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 61,
     "title": "Kai: Keep walking.",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 62,
     "title": "Kai: Contact AM.",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 63,
     "title": "~~>",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 64,
     "title": "~~>",
-    "date": "26-12-2025"
+    "date": "26-12-2025",
+    "noImage": false
   },
   {
     "num": 65,
     "title": "Leave Kai alone and be AM.",
-    "date": "29-12-2025"
+    "date": "29-12-2025",
+    "noImage": false
   },
   {
     "num": 66,
     "title": "Scientist: Choose name.",
-    "date": "29-12-2025"
+    "date": "29-12-2025",
+    "noImage": false
   },
   {
     "num": 67,
     "title": "Scientist: Remember who you are.",
-    "date": "29-12-2025"
+    "date": "29-12-2025",
+    "noImage": false
   },
   {
     "num": 68,
     "title": "~~>",
-    "date": "29-12-2025"
+    "date": "29-12-2025",
+    "noImage": false
   },
   {
     "num": 69,
     "title": "Jane: Mess around on your computer.",
-    "date": "10-01-2026"
+    "date": "10-01-2026",
+    "noImage": false
   },
   {
     "num": 70,
     "title": "Jane: Prepare Kai’s tests.",
-    "date": "10-01-2026"
+    "date": "10-01-2026",
+    "noImage": false
   },
   {
     "num": 71,
     "title": "Jane: Explain Kai’s tests.",
-    "date": "10-01-2026"
+    "date": "10-01-2026",
+    "noImage": false
   },
   {
     "num": 72,
     "title": "Jane: Prepare Kai’s portal gun.",
-    "date": "10-01-2026"
+    "date": "10-01-2026",
+    "noImage": false
   },
   {
     "num": 73,
     "title": "Kai: Ring doorbell.",
-    "date": "10-01-2026"
+    "date": "10-01-2026",
+    "noImage": false
   },
   {
     "num": 74,
     "title": "~~>",
-    "date": "27-01-2026"
+    "date": "27-01-2026",
+    "noImage": false
   },
   {
     "num": 75,
     "title": "Jane: Put Kai in the proper attire.",
-    "date": "27-01-2026"
+    "date": "27-01-2026",
+    "noImage": false
   },
   {
     "num": 76,
     "title": "Kai: Enter the testing environment.",
-    "date": "27-01-2026"
+    "date": "27-01-2026",
+    "noImage": false
   },
   {
     "num": 77,
     "title": "Kai: Push the button.",
-    "date": "27-01-2026"
+    "date": "27-01-2026",
+    "noImage": false
   },
   {
     "num": 78,
     "title": "Confetti: Reveal.",
-    "date": "27-01-2026"
+    "date": "27-01-2026",
+    "noImage": false
   },
   {
     "num": 79,
     "title": "Kai: Catastract the confetti.",
-    "date": "27-01-2026"
+    "date": "27-01-2026",
+    "noImage": false
   },
   {
     "num": 80,
     "title": "Author: Stop retconning the fun stuff.",
-    "date": "05-02-2026"
+    "date": "05-02-2026",
+    "noImage": false
   },
   {
     "num": 81,
     "title": "Kai: Push the button until the test chamber is filled with confetti.",
-    "date": "05-02-2026"
+    "date": "05-02-2026",
+    "noImage": false
   },
   {
     "num": 82,
     "title": "Kai: Put some of the confetti in your hair.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 83,
     "title": "Kai: Next test.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 84,
     "title": "Kai: Cube.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 85,
     "title": "Cube: Button.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 86,
     "title": "Kai: Cube: Button.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 87,
     "title": "Confetti: Reveal.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 88,
     "title": "Be Jane.",
-    "date": "11-02-2026"
+    "date": "11-02-2026",
+    "noImage": false
   },
   {
     "num": 89,
     "title": "Jane: What’s he even doing here?",
-    "date": "01-03-2026"
+    "date": "01-03-2026",
+    "noImage": false
   },
   {
     "num": 90,
     "title": "Jane: Explain what Kai is testing.",
-    "date": "01-03-2026"
+    "date": "01-03-2026",
+    "noImage": false
   },
   {
     "num": 91,
     "title": "Jane: The Device?",
-    "date": "01-03-2026"
+    "date": "01-03-2026",
+    "noImage": false
   },
   {
     "num": 92,
     "title": "[S] The Device: Warm up.",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 93,
     "title": "~~>",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 94,
     "title": "Jane: Get Kai.",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 95,
     "title": "Kai: Enter the portal room.",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 96,
     "title": "Just get this over with.",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 97,
     "title": "~~>",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 98,
     "title": "Stupid dipshit: Your name is FUCKFACE.",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 99,
     "title": "Smart Person*: Remember who you are.",
-    "date": "02-03-2026"
+    "date": "02-03-2026",
+    "noImage": false
   },
   {
     "num": 100,
     "title": "Liam: Make sure your brother is safe.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 101,
     "title": "Liam: Go upstairs and check.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 102,
     "title": "Liam: Message Kai to be sure.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 103,
     "title": "Liam: Message Scott.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 104,
     "title": "Tau: Fondly regard creation.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 105,
     "title": "~~>",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 106,
     "title": "Tau: Explain yourself.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 107,
     "title": "Tau: Who created Willow then?",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 108,
     "title": "Tau: Infodump.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 109,
     "title": "~~>",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 110,
     "title": "~~>",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 111,
     "title": "Tau: Tell a story about your tritheology.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 112,
     "title": "Tau: Single-handedly??",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 113,
     "title": "~~>",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 114,
     "title": "Tau: Recite.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 115,
     "title": "~~>",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 116,
     "title": "~~>",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 117,
     "title": "Be Kai.",
-    "date": "03-03-2026"
+    "date": "03-03-2026",
+    "noImage": false
   },
   {
     "num": 118,
     "title": "Kai: Get in the fetal position while sucking your thumb.",
-    "date": "26-03-2026"
+    "date": "26-03-2026",
+    "noImage": false
   },
   {
     "num": 119,
     "title": "Kai: Be Scott to stop being scared.",
-    "date": "26-03-2026"
+    "date": "26-03-2026",
+    "noImage": false
   },
   {
     "num": 120,
     "title": "Kai: Chill out.",
-    "date": "26-03-2026"
+    "date": "26-03-2026",
+    "noImage": false
   },
   {
     "num": 121,
     "title": "~~>",
-    "date": "26-03-2026"
+    "date": "26-03-2026",
+    "noImage": false
   },
   {
     "num": 122,
     "title": "Kai: Breathe out.",
-    "date": "26-03-2026"
+    "date": "26-03-2026",
+    "noImage": false
   },
   {
     "num": 123,
     "title": "~~>",
-    "date": "26-03-2026"
+    "date": "26-03-2026",
+    "noImage": false
   },
   {
     "num": 124,
     "title": "[S] Kai: Do this shit.",
-    "date": "03-05-2026"
+    "date": "03-05-2026",
+    "noImage": false
   },
   {
     "num": 125,
     "title": "END OF ACT 1",
-    "date": "03-05-2026"
+    "date": "03-05-2026",
+    "noImage": false
   },
   {
     "num": 126,
     "title": "Meanwhile, atop a field of buildings...",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 127,
     "title": "Assassin: Reveal yourself.",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 128,
     "title": "~~>",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 129,
     "title": "~~>",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 130,
     "title": "~~>",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 131,
     "title": "ACT 2",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 132,
     "title": "Lab Partner: Remember who you are.",
-    "date": "04-05-2026"
+    "date": "04-05-2026",
+    "noImage": false
   },
   {
     "num": 133,
     "title": "Lily: Consider lesbianism.",
-    "date": "29-05-2026"
+    "date": "29-05-2026",
+    "noImage": false
   },
   {
     "num": 134,
     "title": "~~>",
-    "date": "29-05-2026"
+    "date": "29-05-2026",
+    "noImage": false
   },
   {
     "num": 135,
     "title": "Lily: Begin preparations.",
-    "date": "29-05-2026"
+    "date": "29-05-2026",
+    "noImage": false
   },
   {
     "num": 136,
     "title": "~~>",
-    "date": "29-05-2026"
+    "date": "29-05-2026",
+    "noImage": false
   },
   {
     "num": 137,
     "title": "Lily: Do a twirl to gain some FLAIR CREDIT. That’s still a thing right?",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 138,
     "title": "Lily: Doodle something from the lab.",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 139,
     "title": "~~>",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 140,
     "title": "Lily: Draw Dr. Mint.",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 141,
     "title": "Lily: Maybe save and quit before she sees.",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 142,
     "title": "Lily: Press the up arrow a bit to see previous commands, to remember what you were doing.",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 143,
     "title": "Lily: Initialize the VGID.",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 144,
     "title": "~~>",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 145,
     "title": "~~>",
-    "date": "30-05-2026"
+    "date": "30-05-2026",
+    "noImage": false
   },
   {
     "num": 146,
     "title": "Lily: Do the programming thing.",
-    "date": "01-06-2026"
+    "date": "01-06-2026",
+    "noImage": false
   },
   {
     "num": 147,
     "title": "Lily: Check up on your partner. In science.",
-    "date": "01-06-2026"
+    "date": "01-06-2026",
+    "noImage": false
   },
   {
     "num": 148,
     "title": "~~>",
-    "date": "01-06-2026"
+    "date": "01-06-2026",
+    "noImage": false
   },
   {
     "num": 149,
     "title": "~~>",
-    "date": "01-06-2026"
+    "date": "01-06-2026",
+    "noImage": false
   },
   {
     "num": 150,
     "title": "~~>",
-    "date": "01-06-2026"
+    "date": "01-06-2026",
+    "noImage": false
   },
   {
     "num": 151,
     "title": "Jane and Lily: Kiss Awesomely? Maybe?",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 152,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 153,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 154,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 155,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 156,
     "title": "Lily: Fall in love.",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 157,
     "title": "Lily: Look into this guy, too.",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 158,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 159,
     "title": "Lily: Message this umbraFelix person.",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 160,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 161,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 162,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 163,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 164,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 165,
     "title": "~~>",
-    "date": "02-06-2026"
+    "date": "02-06-2026",
+    "noImage": false
   },
   {
     "num": 166,
     "title": "Lily: Tell astraMinutus about this discovery. (even though she already knows)",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 167,
     "title": "Lily: Punch a random button on the console for fun.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 168,
     "title": "Lily: Look into some guys.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 169,
     "title": "Lily: You know what I meant. Do it.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 170,
     "title": "Flip the perspective.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 171,
     "title": "Next.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 172,
     "title": "Do super awesome and deep multi-reference fourth wall break.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 173,
     "title": "Jade: Recap.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 174,
     "title": "Next.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 175,
     "title": "Next.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 176,
     "title": "~~>",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 177,
     "title": "~~>",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 178,
     "title": "Lily: Use the QNLDB.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 179,
     "title": "Lily: Enter name.",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   },
   {
     "num": 180,
     "title": "~~>",
-    "date": "19-06-2026"
+    "date": "19-06-2026",
+    "noImage": false
   }
 ]
