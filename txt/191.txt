@@ -1,0 +1,6 @@
+Lily: Take care of the nullPointerException.
+25-07-2026
+------
+...Sorry?
+
+You know what a null pointer exception is, but there... isn’t one.
