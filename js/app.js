@@ -238,6 +238,9 @@ import {
       ),
       h('div', { class: 'actions' },
         h('button', { class: 'btn btn-primary', onClick: (e) => navigateTo('/story/1', e) }, 'Read!'),
+        h('div', { class: 'actions__secondary' },
+          h('button', { class: 'btn', onClick: (e) => navigateTo('/stories', e) }, 'Other Stories')
+        ),
         h('p', { class: 'hash-fallback' },
           'No clean URLs? Use ',
           h('a', {
@@ -812,6 +815,139 @@ import {
     app.append(lightModeToggle);
   }
 
+  // ── Other Stories ───────────────────────────────────────────────────────────
+  // The /stories menu is driven entirely by txt/stories.json, so it can be modified with no code change.
+  const DEFAULT_SECRET_TEXT = "It's a secret!";
+
+  async function fetchStories() {
+    const res = await fetch('/txt/stories.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('Missing: /txt/stories.json');
+    const data = await res.json();
+    return Array.isArray(data) ? data : (data.stories || []);
+  }
+
+  function isExternalUrl(url) {
+    return /^(https?:)?\/\//i.test(url || '');
+  }
+
+  function storyEntry(story) {
+    const hidden = story.hidden === true;
+
+    const blankThumb = () => h('div', { class: 'story-entry__thumb story-entry__thumb--blank', 'aria-hidden': 'true' });
+
+    let thumbSlot;
+    if (hidden) {
+      thumbSlot = h('div', { class: 'story-entry__thumb story-entry__thumb--secret', 'aria-hidden': 'true' }, '?');
+    } else if (story.thumb) {
+      // A thumb pointing at a file that isn't there would otherwise collapse the
+      // row's left column; swap in the empty placeholder box so the grid holds.
+      thumbSlot = h('img', {
+        class: 'story-entry__thumb',
+        src: story.thumb,
+        alt: '',
+        loading: 'lazy',
+        onError: (e) => e.target.replaceWith(blankThumb())
+      });
+    } else {
+      thumbSlot = blankThumb();
+    }
+
+    const body = h('div', { class: 'story-entry__body' });
+
+    if (hidden) {
+      body.append(
+        h('h3', { class: 'story-entry__title' }, '???'),
+        h('p', { class: 'story-entry__desc story-entry__desc--secret' }, story.secret || DEFAULT_SECRET_TEXT)
+      );
+      return h('div', { class: 'story-entry story-entry--secret' }, thumbSlot, body);
+    }
+
+    const title = story.title || 'Untitled';
+    const external = isExternalUrl(story.url);
+
+    body.append(
+      h('h3', { class: 'story-entry__title' },
+        story.url
+          ? h('a', Object.assign(
+              { href: story.url },
+              external
+                ? { target: '_blank', rel: 'noopener' }
+                : { onClick: (e) => { if (!navigateTo(story.url, e)) e.preventDefault(); } }
+            ), title)
+          : title
+      )
+    );
+    if (story.description) {
+      body.append(h('p', { class: 'story-entry__desc' }, story.description));
+    }
+
+    return h('div', { class: 'story-entry' }, thumbSlot, body);
+  }
+
+  async function renderStories() {
+    app.innerHTML = '';
+    applyLightMode();
+
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel log stories');
+    app.append(header, underHeader, main);
+
+    panel.append(h('h2', { class: 'panel__title' }, 'Other Stories'));
+    const status = h('p', { class: 'loading' }, 'Loading stories...');
+    panel.append(status);
+
+    document.title = 'Other Stories - Null and Void';
+
+    let stories;
+    try {
+      stories = await fetchStories();
+    } catch {
+      status.className = '';
+      status.textContent = 'Failed to load stories.';
+      app.append(lightModeToggle);
+      return;
+    }
+
+    status.remove();
+
+    if (!stories.length) {
+      panel.append(h('p', { class: 'loading' }, 'No stories yet.'));
+    } else {
+      const list = h('div', { class: 'story-list' });
+      for (const story of stories) list.append(storyEntry(story));
+      panel.append(list);
+    }
+
+    app.append(lightModeToggle);
+  }
+
+  // A bare "nothing here yet" view, in the same shape as the Map placeholder.
+  // Give it real content by replacing the call in route() with a dedicated
+  // render function.
+  function renderPlaceholder(title) {
+    app.innerHTML = '';
+    applyLightMode();
+
+    const { header, underHeader, lightModeToggle, main, panel } = renderChrome('panel');
+    app.append(header, underHeader, main);
+
+    panel.append(
+      h('h2', { class: 'panel__title' }, title),
+      h('p', { style: { textAlign: 'center', fontSize: '24px', marginTop: '40px' } }, 'TBD')
+    );
+
+    app.append(lightModeToggle);
+
+    document.title = `${title} - Null and Void`;
+  }
+
+  function renderKings() {
+    renderPlaceholder('Kings');
+  }
+
+  function renderOldComic() {
+    renderPlaceholder('Old Comics');
+  }
+
   async function renderMap() {
     app.innerHTML = '';
     applyLightMode();
@@ -846,6 +982,12 @@ import {
     // Check for hash-based routes as fallback
     if (path === '/log' || hash === '#/log') {
       renderLog();
+    } else if (path === '/stories' || hash === '#/stories') {
+      renderStories();
+    } else if (path === '/kings' || hash === '#/kings') {
+      renderKings();
+    } else if (path === '/oldcomic' || hash === '#/oldcomic') {
+      renderOldComic();
     } else if (path === '/map' || hash === '#/map') {
       renderMap();
     } else {
